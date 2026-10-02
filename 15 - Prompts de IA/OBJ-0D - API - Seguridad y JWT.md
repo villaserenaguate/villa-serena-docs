@@ -10,6 +10,8 @@
 | Depende de | OBJ-0B (proyecto base). Las tablas `empleados` y `refresh_tokens` las crea Josué (OBJ-0C) |
 | Calendario | Vie 2 (2,5 h) y Lun 5 (1,5 h) |
 
+> **Antes de empezar:** prepara tu computadora con la `16 - Guia de Arranque del Proyecto.md` (instalar, `.env` y encender Docker). Para crear tu rama y subir tu trabajo con un pull request, sigue la sección 3 de `00 - Como usar los prompts.md`.
+
 ## Documentos que debes adjuntar a la IA
 
 - `AGENTS.md`
@@ -80,3 +82,7 @@ Primero muéstrame el plan de clases y endpoints; después impleméntalo por pas
 4. `/renovar` entrega un refresh nuevo y el anterior ya no sirve.
 5. Al arrancar, se crea el Administrador del `.env` si su correo no existía, y debe cambiar su contraseña en el primer acceso.
 6. Ninguna clave aparece en el código ni en los logs.
+
+## Al terminar
+
+Cuando tu pull request se fusione, abre `17 - Avance del Proyecto.md` (repositorio `villa-serena-docs`), cambia tu casilla de `[ ]` a `[x]` y agrega el número del PR. Si no sabes cómo, avisa en el grupo y Josué la marca.

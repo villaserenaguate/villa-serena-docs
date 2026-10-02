@@ -1,0 +1,94 @@
+# OBJ-1A — API: hotel, catálogo, diseño del canal y guía de Stripe CLI
+
+| Dato | Valor |
+|---|---|
+| Objetivo | 1 — Reservar (documento 13) |
+| Repositorios | `villa-serena-api` (API del hotel y catálogo) y `villa-serena-docs` (diseño del canal y guía de Stripe CLI) |
+| Responsable | Josué |
+| Horas estimadas | 2,5 h (guía de Stripe CLI 0,5 h; API del hotel y catálogo 1 h; diseño del canal 1 h) |
+| Cubre | HU-HUE-01 y HU-HUE-02 (lado API); tarea técnica ALC-CM-01 |
+| Depende de | OBJ-0C (datos iniciales del hotel y de los tipos de habitación) y contrato parte 1 (OBJ-0G) |
+| Calendario | Mar 6: **primero la guía de Stripe CLI** (Pablo la necesita ese día), luego el API del hotel y el catálogo. Jue 8: diseño del canal |
+
+> **Antes de empezar:** prepara tu computadora con la `16 - Guia de Arranque del Proyecto.md`. Para crear tu rama y subir tu trabajo con un pull request, sigue la sección 3 de `00 - Como usar los prompts.md`.
+
+> **Avance (1 de octubre):** la guía de Stripe CLI (prompt 1) y el diseño del canal (prompt 3) ya están hechos: `18 - Guia de Stripe CLI.md` y `19 - Diseno de Integracion con Canales.md`. Solo falta el **prompt 2** (API del hotel y del catálogo).
+
+## Documentos que debes adjuntar a la IA
+
+- `AGENTS.md`
+- `openapi.yaml` (contrato, parte 1)
+- `HU - Cliente y Huesped.md` (HU-HUE-01 y HU-HUE-02) y `HU - Channel Manager.md`
+- `14 - Tecnologias y Arquitectura.md` (secciones 2, 4.4, 6 y 8)
+- `01 - Alcance del Proyecto.md` (ALC-CM-01 a ALC-CM-04)
+
+## Prompt 1 — Guía de Stripe CLI (en `villa-serena-docs`)
+
+```text
+Trabajas en el repositorio villa-serena-docs del proyecto Villa Serena. Responde en
+español.
+
+Escribe "Guia de Stripe CLI.md": una guía corta, para principiantes en Windows, de
+cómo probar los pagos de Stripe en local (modo prueba):
+1. Crear una cuenta de Stripe y quedarse en modo prueba (sin datos bancarios).
+2. Dónde copiar la clave secreta de prueba (sk_test_...) y en qué variable del .env
+   del API ponerla. Recordar: nunca subirla a Git ni pegarla en un chat de IA.
+3. Instalar Stripe CLI en Windows e iniciar sesión (stripe login).
+4. Reenviar los avisos al API local con stripe listen --forward-to
+   localhost:8080/api/v1/pagos/stripe/webhook (usa la ruta de openapi.yaml) y
+   copiar la clave de firma del webhook (whsec_...) al .env. Cada integrante tiene
+   la suya.
+5. Tarjetas de prueba: una aprobada y una rechazada.
+6. Errores comunes (firma inválida, puerto equivocado, CLI cerrado).
+```
+
+## Prompt 2 — API del hotel y del catálogo (en `villa-serena-api`)
+
+```text
+Trabajas en el repositorio villa-serena-api del proyecto Villa Serena (lee AGENTS.md
+y los documentos adjuntos). Responde en español.
+
+Objetivo: los endpoints públicos (sin sesión) de HU-HUE-01 y HU-HUE-02, tal como
+están en openapi.yaml, en los paquetes catalogos y config.
+
+1. Información del hotel: nombre, descripción, ubicación, fotos, contacto y horas
+   fijas 15:00 y 12:00, leídos de configuracion_hotel (datos iniciales).
+2. Catálogo: solo tipos de habitación ACTIVO, con nombre, descripción, capacidad,
+   precio base por noche en quetzales y fotos. Detalle de un tipo con todas sus
+   fotos. Un tipo INACTIVO responde 404.
+3. Fotos: URL públicas del bucket público de MinIO (variables del .env). Si un tipo
+   no tiene fotos, lista vacía (la web pone una imagen genérica).
+4. DTO públicos: nunca devuelvas la entidad completa.
+5. Pruebas: tipos inactivos no aparecen; el detalle de un tipo inactivo da 404.
+
+No crees pantallas de administración (los catálogos vienen en Flyway en el hito).
+Primero muéstrame el plan; después impleméntalo.
+```
+
+## Prompt 3 — Diseño breve de la integración con canales (en `villa-serena-docs`)
+
+```text
+Trabajas en el repositorio villa-serena-docs. Responde en español.
+
+Escribe "Diseno de Integracion con Canales.md" (ALC-CM-01): un documento de 2 a 3
+páginas que explique, en lenguaje simple:
+1. Qué hace hoy el sistema: canal simulado, API REST/JSON con clave por canal (hash),
+   sin duplicados por identificador externo, misma disponibilidad que la web
+   (documento 14, AD-13; HU-CM-01 a 03).
+2. Qué faltaría para conectarse de verdad a Booking o Expedia: formatos OTA,
+   firmas, cancelaciones y modificaciones, sincronización de disponibilidad y
+   tarifas, y pruebas de certificación. Solo como diseño; nada de esto se programa.
+3. Un diagrama sencillo en texto (o Mermaid) del flujo de una reserva de canal.
+4. Limitaciones aceptadas (por ejemplo, las reservas de canal no se cancelan desde
+   el sistema).
+```
+
+## Cómo saber que quedó terminado
+
+1. Pablo pudo seguir la guía de Stripe CLI y recibir un webhook de prueba en su API.
+2. `GET` del hotel y del catálogo responden según `openapi.yaml`; un tipo inactivo no aparece y su detalle da 404.
+3. El documento de diseño del canal está en `villa-serena-docs`.
+
+## Al terminar
+
+Cuando tu pull request se fusione, abre `17 - Avance del Proyecto.md` (repositorio `villa-serena-docs`), cambia tu casilla de `[ ]` a `[x]` y agrega el número del PR.

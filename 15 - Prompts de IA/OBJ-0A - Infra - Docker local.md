@@ -9,6 +9,8 @@
 | Cubre | Tareas técnicas: entorno local con Docker (ALC-TRA-10) y Grafana en local (ALC-TRA-09, AD-15) |
 | Depende de | Nada. Puede hacerse el jueves 1 por la noche (opcional) |
 
+> **Antes de empezar:** prepara tu computadora con la `16 - Guia de Arranque del Proyecto.md` (instalar, `.env` y encender Docker). Para crear tu rama y subir tu trabajo con un pull request, sigue la sección 3 de `00 - Como usar los prompts.md`.
+
 ## Documentos que debes adjuntar a la IA
 
 - `AGENTS.md`
@@ -57,3 +59,7 @@ Primero muéstrame el plan de archivos; después créalos.
 3. Grafana abre en http://localhost:3001 con el tablero del API (sin datos hasta que el API arranque).
 4. Cuando Hugo termine OBJ-0B y el API corra, Prometheus (http://localhost:9090/targets) muestra el objetivo del API en estado "UP" y el tablero de Grafana muestra datos.
 5. `git status` no muestra ningún `.env`.
+
+## Al terminar
+
+Cuando tu pull request se fusione, abre `17 - Avance del Proyecto.md` (repositorio `villa-serena-docs`), cambia tu casilla de `[ ]` a `[x]` y agrega el número del PR. Si no sabes cómo, avisa en el grupo y Josué la marca.
