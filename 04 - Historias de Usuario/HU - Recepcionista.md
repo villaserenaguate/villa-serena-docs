@@ -1,107 +1,94 @@
-# HU — Recepcionista
+# HU — Recepcionista (versión 3)
 
-> **Rol:** Recepcionista (`RECEPCION`). El Administrador también puede realizar todas estas operaciones.
+> **Rol:** Recepcionista (`RECEPCION`). Estas pantallas son solo de Recepción: el Administrador usa únicamente las suyas (R-02).
 > **Plataforma:** Web privada
 > **Prefijo:** `HU-REC`
-> **Total de historias:** 23
-> **Referencias:** 01 — Alcance (sección B) · 02 — Definición de Roles (3.2)
+> **Total de historias:** 17 (Nivel 1: 16 · Nivel 2: 1)
+> **Referencias:** Documentación V3 / 01 — Alcance (sección B; ALC-MYL-07 de la sección G)
+> **Numeración:** nueva en la versión 3. La correspondencia con la versión 2 está en cada historia ("Reemplaza a") y en el índice.
 
 ---
 
-## Épica 1: Huéspedes
+## Épica 1: Huéspedes y reservas
 
-### HU-REC-01 — Registrar huésped
+### HU-REC-01 — Registrar un huésped
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Huéspedes | ALC-REC-01 | Alta | S | Pendiente |
+| Web privada | Huéspedes y reservas | ALC-REC-01 | 1 | S | Pendiente |
 
 **Historia**
 - **Como** recepcionista
 - **Quiero** registrar los datos personales de un huésped
-- **Para** crear su perfil dentro del sistema
+- **Para** poder asociarlo a sus reservas
 
 **Criterios de aceptación**
 1. Se registran nombre completo, tipo de documento (DPI o pasaporte), número de documento, teléfono, correo y nacionalidad.
-2. Todos los campos son obligatorios; el correo debe tener un formato válido.
-3. Si ya existe un huésped con el mismo documento o correo, se avisa y se ofrece usar el perfil existente.
-4. El huésped queda disponible para asociarlo a reservas.
-5. No se permite registrar como huésped un correo que pertenezca a un empleado.
+2. Todos los campos son obligatorios, incluido el correo, que debe tener un formato válido (a ese correo llegan la confirmación de la reserva, el código de acceso a la app y la factura).
+3. El huésped se identifica por su correo: si ya existe un huésped con ese correo, se avisa y se usa el perfil existente; no se crea otro.
+4. El huésped registrado queda disponible para asociarlo a reservas (HU-REC-04).
 
-**Reglas relacionadas:** RN-PER-006
+**Depende de:** Ninguna
+**Reglas relacionadas:** RN-RES-019 (documento 10)
+**Reemplaza a:** HU-REC-01 (v2)
 
 ---
 
 ### HU-REC-02 — Registrar huéspedes adicionales
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Huéspedes | ALC-REC-01 | Media | S | Pendiente |
+| Web privada | Huéspedes y reservas | ALC-REC-01 | 1 | S | Pendiente |
 
 **Historia**
 - **Como** recepcionista
-- **Quiero** registrar a todas las personas que ocuparán una habitación
-- **Para** mantener un registro completo de los huéspedes alojados
+- **Quiero** registrar a las demás personas que ocuparán la habitación
+- **Para** tener un registro completo de los huéspedes alojados
 
 **Criterios de aceptación**
-1. Desde la reserva se pueden agregar huéspedes adicionales con nombre, documento y nacionalidad.
-2. El total de huéspedes no puede superar la capacidad de la habitación.
-3. Los huéspedes adicionales quedan asociados a la reserva, pero no tienen acceso a la app.
-4. Se muestran los adicionales registrados por el huésped en su check-in anticipado.
+1. Desde el detalle de una reserva `Confirmada` o `En estadía` se pueden agregar huéspedes adicionales con nombre completo, tipo y número de documento y nacionalidad.
+2. El total de huéspedes registrados (principal + adicionales) no puede superar el número de huéspedes de la reserva; si se intenta, se muestra un mensaje y no se guarda.
+3. Los huéspedes adicionales quedan asociados a la reserva, pero no tienen acceso a la app (solo el huésped principal entra con su correo).
+4. Los huéspedes adicionales se muestran en el detalle de la reserva y en el check-in para verificarlos.
 
-**Depende de:** HU-REC-05
+**Depende de:** HU-REC-04
+**Reglas relacionadas:** RN-APP-004, RN-RES-020 (documento 10)
+**Reemplaza a:** HU-REC-02 (v2)
+**Notas técnicas:** como las reservas no se modifican, el número de huéspedes de la reserva no cambia al registrar adicionales.
 
 ---
 
-### HU-REC-03 — Consultar el historial de un huésped
+### HU-REC-03 — Consultar disponibilidad
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Huéspedes | ALC-REC-08 | Baja | S | Pendiente |
+| Web privada | Huéspedes y reservas | ALC-REC-03 | 1 | S | Pendiente |
 
 **Historia**
 - **Como** recepcionista
-- **Quiero** consultar las estadías anteriores de un huésped
-- **Para** conocer sus visitas y preferencias
-
-**Criterios de aceptación**
-1. Se busca al huésped por nombre, documento o correo.
-2. Se listan sus reservas con fechas, habitación, estado y total pagado.
-3. Se puede ver el detalle de la cuenta de cada estadía (servicios consumidos y pagos).
-
-**Depende de:** HU-REC-01
-
----
-
-## Épica 2: Reservas
-
-### HU-REC-04 — Consultar disponibilidad
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Reservas | ALC-REC-03 | Alta | S | Pendiente |
-
-**Historia**
-- **Como** recepcionista
-- **Quiero** consultar las habitaciones disponibles para un rango de fechas
-- **Para** ofrecer opciones al huésped
+- **Quiero** consultar qué tipos de habitación están disponibles para unas fechas
+- **Para** ofrecer opciones al huésped que llama o llega al hotel
 
 **Criterios de aceptación**
 1. Se ingresan fecha de entrada, fecha de salida y número de huéspedes.
-2. Se muestran las habitaciones disponibles con número, tipo, capacidad y precio total del rango.
-3. Se excluyen habitaciones con reservas que se traslapen o que estén fuera de servicio.
-4. Si no hay disponibilidad, se muestra un mensaje claro.
+2. La estadía debe ser de 1 a 30 noches, no puede incluir fechas pasadas y la fecha de entrada no puede estar a más de 365 días; si no se cumple, se muestra el motivo.
+3. Solo se muestran los tipos de habitación activos cuya capacidad alcanza para el número de huéspedes indicado.
+4. La disponibilidad de cada tipo y noche es: habitaciones activas del tipo que no están `Fuera de servicio` − reservas activas de ese tipo (`Pendiente de pago`, `Confirmada`, `En estadía`), **con o sin habitación asignada**. Un tipo se ofrece solo si tiene al menos 1 disponible en **todas** las noches del rango.
+5. Para cada tipo disponible se muestra cuántas habitaciones quedan, el precio por noche y el total de la estadía en quetzales (impuestos incluidos).
+6. Si no hay ningún tipo disponible, se muestra un mensaje claro.
 
-**Reglas relacionadas:** RN-RES-001, RN-RES-002, RN-HAB-001
-**Notas técnicas:** usa el mismo cálculo de disponibilidad y precio que la web pública (HU-HUE-03, HU-HUE-04).
+**Depende de:** HU-ADM-03, HU-ADM-04, HU-ADM-06
+**Reglas relacionadas:** RN-RES-002, RN-RES-005, RN-RES-006, RN-RES-007, RN-RES-008 (documento 10)
+**Reemplaza a:** HU-REC-04 (v2)
+**Notas técnicas:** usa el mismo cálculo de disponibilidad y de precio que la web pública y el Channel Manager (un solo servicio en el backend).
 
 ---
 
-### HU-REC-05 — Crear reserva
+### HU-REC-04 — Crear una reserva
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Reservas | ALC-REC-02, ALC-REC-13 | Alta | M | Pendiente |
+| Web privada | Huéspedes y reservas | ALC-REC-02, ALC-REC-13 | 1 | M | Pendiente |
 
 **Historia**
 - **Como** recepcionista
@@ -109,135 +96,105 @@
 - **Para** garantizarle una habitación durante su estadía
 
 **Criterios de aceptación**
-1. Se selecciona un huésped existente o se registra uno nuevo.
-2. Se indican fechas, número de huéspedes y tipo de habitación (opcionalmente una habitación específica).
-3. Se muestra la tarifa aplicada por noche y el total antes de confirmar.
-4. Antes de guardar se **revalida la disponibilidad**; si no hay, no se crea la reserva.
-5. La reserva se crea en estado `Confirmada`, con canal de origen `Recepción` y un código de reserva único.
-6. Se registra el recepcionista que creó la reserva.
-7. Junto con la reserva se crea la cuenta del huésped con el cargo por alojamiento.
+1. Se selecciona un huésped existente o se registra uno nuevo (HU-REC-01); el correo del huésped es obligatorio.
+2. Se indican fechas, número de huéspedes y tipo de habitación, con las mismas reglas de HU-REC-03 (1 a 30 noches, sin fechas pasadas, hasta 365 días, sin superar la capacidad del tipo). Opcionalmente se elige una habitación del tipo, con las reglas de HU-REC-07.
+3. Antes de confirmar se muestra la tarifa de cada noche y el total: precio base del tipo × (1 + % de temporada vigente) × (1 + % de fin de semana si la noche es viernes o sábado), redondeado a 2 decimales. El precio lo calcula el servidor y queda fijo al crear la reserva.
+4. Al guardar se **revalida la disponibilidad**; si ya no hay, la reserva no se crea y se muestra un mensaje.
+5. La reserva nace `Confirmada`, con canal de origen "Recepción", un código único no secuencial (ej. `VS-7K2M9Q`) y el registro del recepcionista que la creó.
+6. Junto con la reserva se crea la cuenta del huésped (`Abierta`) con el cargo por alojamiento. **No se cobra por adelantado:** todo el saldo se paga en el check-out (HU-REC-14).
+7. Se envía al huésped el correo de confirmación con el código de reserva y el enlace de la app (el mismo de HU-HUE-07).
 
-**Reglas relacionadas:** RN-RES-001, RN-RES-002
-**Depende de:** HU-REC-01, HU-REC-04
+**Depende de:** HU-REC-01, HU-REC-03
+**Reglas relacionadas:** RN-NOT-005, RN-PAG-007, RN-PAG-009, RN-RES-001, RN-RES-005, RN-RES-006, RN-RES-007, RN-RES-009, RN-RES-010, RN-RES-011, RN-RES-013, RN-TAR-001, RN-TAR-002, RN-TAR-006, RN-TAR-007, RN-TAR-008 (documento 10)
+**Reemplaza a:** HU-REC-05 (v2)
 
 ---
 
-### HU-REC-06 — Modificar reserva
+### HU-REC-05 — Cancelar una reserva
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Reservas | ALC-REC-02 | Alta | M | Pendiente |
+| Web privada | Huéspedes y reservas | ALC-REC-02 | 1 | M | Pendiente |
 
 **Historia**
 - **Como** recepcionista
-- **Quiero** modificar una reserva existente
-- **Para** atender los cambios que solicite el huésped
+- **Quiero** cancelar una reserva a pedido del huésped
+- **Para** liberar la disponibilidad del hotel
 
 **Criterios de aceptación**
-1. Se pueden modificar fechas, número de huéspedes, tipo de habitación y habitación de reservas `Confirmada` o `En estadía`.
-2. En una reserva `En estadía` solo se puede modificar la fecha de salida y la habitación.
-3. Todo cambio que afecte disponibilidad se revalida antes de guardar.
-4. Si cambia el precio, se muestra la diferencia y el nuevo total antes de confirmar; al guardar, el cargo por alojamiento de la cuenta se ajusta.
-5. El cambio queda registrado con fecha, hora y responsable.
-6. Si la modificación deja un saldo a favor del huésped, ese saldo se reembolsa antes del check-out.
+1. Solo se pueden cancelar reservas `Confirmada`; en cualquier otro estado la opción no aparece y el backend lo rechaza. Las reservas `Pendiente de pago` no se cancelan a mano: se cancelan solas a los 30 minutos si no se pagan (HU-HUE-06).
+2. Las reservas que llegaron de un canal externo (Booking, Expedia) **no se pueden cancelar** desde el sistema; se muestra un mensaje que lo indica.
+3. El motivo de cancelación es obligatorio.
+4. Antes de confirmar se muestra qué pasará con el dinero, sin cálculos parciales: si faltan **48 horas o más** para la hora de check-in (15:00, fija) del día de llegada y el huésped pagó en línea → **reembolso total** por Stripe; con menos de 48 horas → **sin reembolso**; si la reserva no tiene pagos (creada en Recepción) → no hay nada que reembolsar.
+5. Al confirmar, la reserva pasa a `Cancelada`, la cuenta se cierra tal como está (`Cerrada`), la habitación asignada se libera y la disponibilidad vuelve a quedar libre. Se registra fecha, hora, responsable y motivo.
+6. Si corresponde reembolso, se solicita a Stripe y el pago pasa a `Reembolsado`. Si Stripe rechaza el reembolso, la reserva no se cancela y se muestra el error.
 
-**Reglas relacionadas:** RN-RES-003, RN-RES-017, RN-TAR-007, RN-PAG-016
-**Depende de:** HU-REC-05
+**Depende de:** HU-REC-04, HU-HUE-06
+**Reglas relacionadas:** RN-CAN-001, RN-CAN-002, RN-CAN-006, RN-CAN-008, RN-CAN-011, RN-CAN-012, RN-CAN-013, RN-RES-004, RN-SEG-006 (documento 10)
+**Reemplaza a:** HU-REC-07 (v2)
+**Notas técnicas:** para cambiar fechas, tipo o número de huéspedes, Recepción cancela la reserva y crea otra (las reservas no se modifican). **Huésped que no llega:** no existe el estado `No-show`; Recepción cancela la reserva con el motivo "No se presentó" y, como faltan menos de 48 horas, no hay reembolso (V-01). **No se envía correo de cancelación:** Recepción avisa al cliente por su cuenta (V-05). **Reserva de canal cuyo huésped no llega:** como las reservas de canal no se cancelan desde el sistema, queda `Confirmada`; es una limitación aceptada, porque no ocurre en la demostración.
 
 ---
 
-### HU-REC-07 — Cancelar reserva
+### HU-REC-06 — Buscar reservas
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Reservas | ALC-REC-02 | Alta | S | Pendiente |
+| Web privada | Huéspedes y reservas | ALC-REC-08 | 1 | M | Pendiente |
 
 **Historia**
 - **Como** recepcionista
-- **Quiero** cancelar una reserva
-- **Para** mantener actualizada la disponibilidad del hotel
+- **Quiero** buscar reservas y ver de un clic las llegadas y salidas de hoy
+- **Para** encontrar rápido la información que necesito y organizar el día
 
 **Criterios de aceptación**
-1. Solo se pueden cancelar reservas `Pendiente de pago` o `Confirmada`.
-2. Se debe seleccionar un motivo de cancelación (obligatorio).
-3. Se muestra la penalidad y el reembolso que aplican según la política (RN-CAN-002 a RN-CAN-007).
-4. Se solicita confirmación antes de cancelar.
-5. La reserva pasa a `Cancelada` y la habitación se libera.
-6. El huésped recibe un correo notificando la cancelación.
+1. Se puede buscar por nombre del huésped, número de documento, código de reserva y rango de fechas, y filtrar por estado y por canal de origen.
+2. Filtro rápido **"Llegan hoy":** reservas `Confirmada` con fecha de entrada hoy, con acceso directo al check-in (HU-REC-12).
+3. Filtro rápido **"Salen hoy":** reservas `En estadía` con fecha de salida hoy, con su saldo pendiente y acceso directo al check-out (HU-REC-14).
+4. Los resultados muestran código, huésped principal, fechas, tipo, habitación (o "Sin asignar"), estado y canal de origen.
+5. El detalle de la reserva muestra los datos del huésped y de los adicionales, las fechas, el tipo, la habitación, el total, el canal y el **historial de estados** con fecha, hora y responsable de cada cambio.
+6. Desde el detalle solo se ofrecen las acciones válidas para el estado actual (asignar habitación, check-in, cancelar, ver la cuenta, check-out, imprimir factura).
+7. Si no hay resultados, se muestra un mensaje claro.
 
-**Reglas relacionadas:** RN-RES-004
-**Depende de:** HU-REC-05
+**Depende de:** HU-REC-04
+**Reglas relacionadas:** RN-RES-023 (documento 10)
+**Reemplaza a:** HU-REC-08, HU-REC-10 (v2)
+**Notas técnicas:** el canal de origen se muestra como en HU-CM-02. **Llegadas después de medianoche:** "Llegan hoy" solo muestra las reservas con entrada hoy; quien llega después de medianoche (entrada de ayer) no aparece y Recepción lo busca por nombre o código. Es una limitación aceptada; lo mismo pasa con "Llega hoy" (HU-REC-10) y "Llegada hoy" (HU-MYL-01).
 
 ---
 
-### HU-REC-08 — Buscar reservas
+### HU-REC-07 — Asignar o cambiar la habitación antes del check-in
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Reservas | ALC-REC-08 | Alta | S | Pendiente |
+| Web privada | Huéspedes y reservas | ALC-REC-04 | 1 | S | Pendiente |
 
 **Historia**
 - **Como** recepcionista
-- **Quiero** buscar reservas por distintos criterios
-- **Para** encontrar rápidamente la información de un huésped
+- **Quiero** asignar o cambiar la habitación de una reserva antes de que llegue el huésped
+- **Para** tener lista su habitación al llegar
 
 **Criterios de aceptación**
-1. Se puede buscar por nombre del huésped, documento, código de reserva o fecha.
-2. Se puede filtrar por estado y por canal de origen.
-3. Los resultados muestran código, huésped, fechas, habitación, estado y canal.
-4. Al seleccionar un resultado se abre el detalle de la reserva.
+1. Solo se puede asignar o cambiar la habitación de reservas `Pendiente de pago` o `Confirmada`. Con la reserva `En estadía` no se puede cambiar (no hay cambio de habitación durante la estadía); se muestra un mensaje.
+2. Solo se ofrecen habitaciones del **mismo tipo reservado** que no estén `Fuera de servicio` y que no tengan otra reserva activa en fechas que se traslapen.
+3. Al guardar, el backend vuelve a validar el traslape; si otra persona ya ocupó esa habitación en esas fechas, no se guarda y se muestra un mensaje.
+4. La habitación no necesita estar `Limpia` para asignarse; esa condición se exige en el check-in.
+5. El cambio queda registrado con fecha, hora y responsable, y la reserva sale de la fila "Sin asignar" del calendario (HU-REC-08).
+
+**Depende de:** HU-REC-04, HU-ADM-04
+**Reglas relacionadas:** RN-HAB-001, RN-HAB-002, RN-RES-002, RN-RES-013, RN-RES-018 (documento 10)
+**Reemplaza a:** HU-REC-09 (v2)
+**Notas técnicas:** también se usa para asignar habitación a las reservas que llegan del canal sin habitación (HU-CM-01).
 
 ---
 
-### HU-REC-09 — Asignar habitación a una reserva
+## Épica 2: Calendario
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+### HU-REC-08 — Ver el calendario Gantt
+
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Reservas | ALC-REC-04 | Alta | S | Pendiente |
-
-**Historia**
-- **Como** recepcionista
-- **Quiero** asignar una habitación específica a una reserva
-- **Para** que el huésped tenga su habitación preparada al llegar
-
-**Criterios de aceptación**
-1. Solo se muestran habitaciones del tipo reservado que estén libres en todo el rango de fechas.
-2. No se pueden asignar habitaciones fuera de servicio.
-3. El sistema impide asignar una habitación que ya tenga otra reserva en fechas que se traslapen.
-4. Se puede asignar o cambiar la habitación mientras la reserva esté `Pendiente de pago`, `Confirmada` o `En estadía`.
-
-**Reglas relacionadas:** RN-RES-002, RN-HAB-001
-**Depende de:** HU-REC-05
-
----
-
-## Épica 3: Operación diaria
-
-### HU-REC-10 — Ver la vista del día
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Operación diaria | ALC-REC-09 | Alta | M | Pendiente |
-
-**Historia**
-- **Como** recepcionista
-- **Quiero** ver en una sola pantalla las llegadas y salidas del día
-- **Para** organizar el trabajo de recepción
-
-**Criterios de aceptación**
-1. Se muestran las llegadas del día (reservas `Confirmada` con entrada hoy), indicando si completaron el check-in anticipado.
-2. Se muestran las salidas del día (reservas `En estadía` con salida hoy) y su saldo pendiente.
-3. Se muestran las reservas `Pendiente de pago`.
-4. Se muestra el número de habitaciones disponibles, ocupadas, sucias y fuera de servicio.
-5. Desde cada fila se puede ir directamente al check-in o al check-out.
-
----
-
-### HU-REC-11 — Ver el calendario Gantt de ocupación
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Operación diaria | ALC-REC-12 | Alta | L | Pendiente |
+| Web privada | Calendario | ALC-REC-12 | 1 | L | Pendiente |
 
 **Historia**
 - **Como** recepcionista
@@ -245,281 +202,249 @@
 - **Para** entender de un vistazo la ocupación del hotel
 
 **Criterios de aceptación**
-1. Las filas son las habitaciones (agrupadas por tipo) y las columnas son los días.
-2. Cada reserva se muestra como una barra desde la fecha de entrada hasta la de salida.
-3. El color de la barra indica el estado de la reserva y un ícono indica el canal de origen.
-4. Las habitaciones fuera de servicio se muestran bloqueadas en los días que corresponda.
-5. Se puede navegar por semanas y por meses, y volver a "hoy".
-6. Al hacer clic en una barra se muestra el resumen de la reserva y un enlace a su detalle.
-7. El calendario se actualiza automáticamente cuando otra persona crea o modifica una reserva.
-8. Las reservas sin habitación asignada se muestran en una fila aparte, "Sin asignar".
+1. Las filas son las habitaciones, agrupadas por tipo, más una fila **"Sin asignar"** para las reservas que todavía no tienen habitación. Las columnas son los días.
+2. Cada reserva activa o finalizada se muestra como una barra desde la fecha de entrada hasta la de salida; las reservas `Cancelada` no se muestran.
+3. El color de la barra indica el estado de la reserva y un ícono indica el canal de origen (Directo web, Recepción, Booking, Expedia).
+4. Al hacer clic en una barra se muestra un resumen (código, huésped, fechas, estado y canal) con un enlace al detalle de la reserva (HU-REC-06).
+5. Se puede navegar por semanas y por meses, y volver a **"Hoy"**.
+6. El botón **"Nueva reserva"** abre el formulario de HU-REC-04; al guardar, la reserva aparece en el calendario.
+7. El calendario se actualiza al abrir la pantalla o al volver a ella (no requiere tiempo real).
+8. Las barras no se pueden arrastrar ni estirar; para cambiar las fechas de una reserva se cancela y se crea otra.
 
-**Depende de:** HU-REC-05, HU-REC-09
+**Depende de:** HU-REC-04, HU-REC-07
+**Reglas relacionadas:** RN-RES-018, RN-RES-024 (documento 10)
+**Reemplaza a:** HU-REC-11 (v2)
 
 ---
 
-### HU-REC-12 — Crear una reserva desde el calendario Gantt
+### HU-REC-09 — Crear una reserva seleccionando días en el Gantt
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Operación diaria | ALC-REC-12 | Alta | M | Pendiente |
+| Web privada | Calendario | ALC-REC-12b | 2 | M | Pendiente |
 
 **Historia**
 - **Como** recepcionista
-- **Quiero** crear una reserva seleccionando días libres en el calendario
-- **Para** reservar más rápido viendo la ocupación
+- **Quiero** crear una reserva seleccionando días libres en la fila de una habitación
+- **Para** reservar más rápido mientras veo la ocupación
 
 **Criterios de aceptación**
-1. Al seleccionar un rango de días libres en la fila de una habitación, se abre el formulario de reserva con la habitación y las fechas ya llenadas.
-2. No se puede seleccionar un rango que se traslape con otra reserva o con un bloqueo.
-3. El formulario aplica las mismas validaciones que HU-REC-05.
-4. Al guardar, la nueva reserva aparece en el calendario sin recargar la página.
+1. Al seleccionar un rango de días libres en la fila de una habitación, se abre el formulario de HU-REC-04 con la habitación, su tipo y las fechas ya llenados.
+2. No se puede seleccionar un rango que se traslape con otra reserva de esa habitación ni en una habitación `Fuera de servicio`.
+3. El formulario aplica las mismas validaciones de HU-REC-04 (noches, capacidad, tarifa y revalidación de disponibilidad); si alguna falla, la reserva no se crea y se muestra el motivo.
+4. Al guardar, la nueva reserva aparece en el calendario.
 
-**Depende de:** HU-REC-11
+**Depende de:** HU-REC-08
+**Reglas relacionadas:** RN-RES-025 (documento 10)
+**Reemplaza a:** HU-REC-12 (v2)
 
 ---
 
-### HU-REC-13 — Consultar el estado de las habitaciones
+## Épica 3: Habitaciones
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+### HU-REC-10 — Ver el estado de las habitaciones
+
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Operación diaria | ALC-REC-10 | Alta | S | Pendiente |
+| Web privada | Habitaciones | ALC-REC-10 | 1 | M | Pendiente |
 
 **Historia**
 - **Como** recepcionista
 - **Quiero** ver el estado actual de todas las habitaciones
-- **Para** saber cuáles puedo ofrecer
+- **Para** saber cuáles puedo usar para el check-in
 
 **Criterios de aceptación**
-1. Cada habitación muestra su **ocupación** (`Libre` / `Ocupada`) y su **condición** (`Limpia` / `Sucia` / `En limpieza` / `Fuera de servicio`).
-2. Se indica si la habitación tiene una llegada programada para hoy.
+1. Cada habitación muestra su número, tipo, piso, **ocupación** (`Libre` / `Ocupada`) y **condición** (`Limpia` / `Sucia` / `En limpieza` / `Fuera de servicio`).
+2. Se muestran los indicadores **"Llega hoy"** (tiene asignada una reserva `Confirmada` con entrada hoy), **"Sale hoy"** (su reserva `En estadía` sale hoy) e **"Incidencia pendiente"** (está `Ocupada` y tiene una incidencia que impide su uso sin resolver).
 3. Se puede filtrar por ocupación, condición, tipo y piso.
-4. Los estados se actualizan automáticamente cuando Limpieza o Mantenimiento los cambian.
-5. Para una habitación `Fuera de servicio` se puede consultar (solo lectura) la incidencia que la bloquea y su estado.
+4. Los cambios de estado de las habitaciones (limpieza, mantenimiento, check-in y check-out) se ven **en tiempo real**, sin recargar la página.
+5. Para una habitación `Fuera de servicio` se puede consultar, en solo lectura, la incidencia que la bloquea y su estado.
+6. Si ninguna habitación cumple los filtros, se muestra un mensaje claro.
 
-**Notas técnicas:** estados definidos en el documento 07 — Estados; permisos en el documento 09.
+**Depende de:** HU-ADM-04
+**Reglas relacionadas:** RN-HAB-014, RN-NOT-009 (documento 10)
+**Reemplaza a:** HU-REC-13 (v2)
 
 ---
 
-### HU-REC-14 — Actualizar el estado de una habitación
+### HU-REC-11 — Marcar una habitación libre como sucia
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Operación diaria | ALC-REC-10 | Media | S | Pendiente |
+| Web privada | Habitaciones | ALC-REC-10 | 1 | S | Pendiente |
 
 **Historia**
 - **Como** recepcionista
-- **Quiero** cambiar la condición de una habitación
-- **Para** mantener la información del hotel sincronizada
+- **Quiero** marcar como sucia una habitación libre
+- **Para** que Limpieza la vuelva a preparar antes de entregarla
 
 **Criterios de aceptación**
-1. Recepción puede marcar una habitación como `Sucia` (por ejemplo, para pedir una limpieza).
-2. Recepción **no** puede marcar una habitación como `Limpia`; eso lo hace Limpieza.
-3. La ocupación (`Libre` / `Ocupada`) no se cambia a mano: cambia solo con el check-in y el check-out.
-4. Para dejar una habitación fuera de servicio se debe reportar una incidencia (HU-REC-22).
-5. Todo cambio registra fecha, hora y responsable.
+1. Solo se puede marcar como `Sucia` una habitación `Libre` + `Limpia`; en cualquier otro caso la opción no aparece y el backend lo rechaza.
+2. Recepción no puede marcar una habitación como `Limpia` (lo hace Limpieza, HU-MYL-03) ni cambiar la ocupación a mano (cambia solo con el check-in y el check-out).
+3. Para dejar una habitación `Fuera de servicio` se debe reportar un daño (HU-REC-17).
+4. El cambio registra fecha, hora y responsable, y aparece en tiempo real en la lista de Limpieza y en el estado de las habitaciones.
 
-**Reglas relacionadas:** RN-HAB-002
+**Depende de:** HU-REC-10
+**Reglas relacionadas:** RN-HAB-004, RN-HAB-005, RN-HAB-006, RN-HAB-013, RN-NOT-009 (documento 10)
+**Reemplaza a:** HU-REC-14 (v2)
 
 ---
 
-## Épica 4: Estadía
+## Épica 4: Estadía y cuenta
 
-### HU-REC-15 — Realizar check-in
+### HU-REC-12 — Realizar el check-in
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Estadía | ALC-REC-05 | Alta | M | Pendiente |
+| Web privada | Estadía y cuenta | ALC-REC-05 | 1 | M | Pendiente |
 
 **Historia**
 - **Como** recepcionista
 - **Quiero** registrar la llegada del huésped
-- **Para** confirmar oficialmente su ingreso al hotel
+- **Para** iniciar oficialmente su estadía
 
 **Criterios de aceptación**
-1. Solo se puede hacer check-in de reservas `Confirmada` cuya fecha de entrada sea hoy.
-2. Se muestran los datos del huésped principal y de los adicionales para verificarlos, incluido lo cargado en el check-in anticipado.
-3. Si la reserva no tiene habitación asignada, se pide asignarla antes de continuar.
-4. La habitación asignada debe estar `Libre` y `Limpia`; si no, se avisa y no se permite el check-in.
-5. Se registran la fecha, la hora y el recepcionista que hizo el check-in.
-6. La reserva pasa a `En estadía` y la habitación a `Ocupada`. (La cuenta del huésped ya existe desde que se creó la reserva.)
-7. Desde ese momento el huésped puede usar las funciones de estadía en la app.
+1. Solo se puede hacer check-in de reservas `Confirmada` si **hoy está entre la fecha de entrada y el día anterior a la salida** (así entra también quien llega después de medianoche); si no, se muestra el motivo (por ejemplo, una reserva `Pendiente de pago` o de fechas futuras). Las noches no usadas se cobran igual.
+2. Se muestran los datos del huésped principal y de los adicionales para verificarlos, y se pueden agregar adicionales (HU-REC-02).
+3. Si la reserva no tiene habitación asignada, se pide asignarla antes de continuar (HU-REC-07).
+4. La habitación asignada debe estar `Libre` + `Limpia`; si no, se avisa y no se permite el check-in. La hora de check-in (15:00, fija) es referencial: se permite antes si la habitación ya está limpia.
+5. Al confirmar, la reserva pasa a `En estadía` y la habitación a `Ocupada`; se registran fecha, hora y recepcionista. La cuenta ya existe desde que se creó la reserva.
+6. Desde ese momento el huésped puede usar en la app room service y solicitudes. Ver su cuenta no depende del estado de la reserva (HU-HUE-15).
 
-**Depende de:** HU-REC-05, HU-REC-09
+**Depende de:** HU-REC-04, HU-REC-07
+**Reglas relacionadas:** RN-HAB-004, RN-RES-014 (documento 10)
+**Reemplaza a:** HU-REC-15 (v2)
 
 ---
 
-### HU-REC-16 — Realizar check-out
+### HU-REC-13 — Consultar la cuenta y agregar cargos
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Estadía | ALC-REC-05 | Alta | M | Pendiente |
+| Web privada | Estadía y cuenta | ALC-REC-06 | 1 | M | Pendiente |
 
 **Historia**
 - **Como** recepcionista
-- **Quiero** registrar la salida del huésped
-- **Para** finalizar su estadía y liberar la habitación
+- **Quiero** ver la cuenta del huésped y agregarle los servicios que consume
+- **Para** saber cuánto debe e incluirlo todo en el cobro final
 
 **Criterios de aceptación**
-1. Solo se puede hacer check-out de reservas `En estadía`.
-2. Se muestra la cuenta completa: alojamiento, cargos adicionales, pagos y saldo.
-3. Se avisa si hay pedidos de room service sin terminar.
-4. El saldo debe ser exactamente cero: si hay saldo pendiente, primero se registra el pago; si hay saldo a favor del huésped, primero se registra el reembolso.
-5. Al confirmar: la reserva pasa a `Finalizada`, la cuenta se cierra, la habitación pasa a `Libre` + `Sucia` (o `Fuera de servicio` si tiene una incidencia que impide su uso), las solicitudes pendientes se cancelan y se registra fecha, hora y responsable.
-6. El huésped recibe por correo el resumen de su cuenta.
+1. La cuenta muestra el cargo por alojamiento con el detalle por noche (en las reservas de canal, una sola línea con el monto del canal), los cargos adicionales (room service y servicios) con fecha, concepto y monto, los pagos (en línea, del canal o en Recepción) con su estado, y el saldo pendiente en quetzales. El saldo es la suma de los cargos `Vigente` menos la suma de los pagos `Aprobado`; los cargos `Anulado` y los pagos `Pendiente`, `Fallido` o `Reembolsado` no intervienen en ese cálculo.
+2. Solo se pueden agregar cargos si la reserva está `En estadía` y la cuenta está `Abierta`; si no, la opción no aparece y el backend lo rechaza.
+3. Para agregar un cargo se indica concepto (restaurante, lavandería, estacionamiento u otro), cantidad y precio unitario (ambos mayores que cero); el total del cargo se calcula solo.
+4. Cada cargo queda registrado con fecha, hora y responsable, y el huésped lo ve en su cuenta en la app.
+5. Los cargos no se borran: un cargo adicional registrado por error se **anula** con un motivo obligatorio. Queda visible como anulado, con responsable, y deja de sumar al saldo.
+6. El cargo por alojamiento no se puede anular; con la cuenta `Cerrada` no se agregan ni anulan cargos.
 
-**Reglas relacionadas:** RN-RES-015, RN-PAG-016, RN-HAB-003, RN-HAB-008
-**Depende de:** HU-REC-15, HU-REC-18
+**Depende de:** HU-REC-04, HU-REC-12
+**Reglas relacionadas:** RN-PAG-010, RN-PAG-011, RN-PAG-019, RN-PAG-020, RN-PAG-021, RN-SEG-006, RN-TAR-009, RN-TAR-010 (documento 10)
+**Reemplaza a:** HU-REC-17, HU-REC-19 (v2)
+**Notas técnicas:** el cargo de room service lo genera el sistema al entregar el pedido (HU-RS-06).
 
 ---
 
-## Épica 5: Cuenta y pagos
+### HU-REC-14 — Realizar el check-out con pago único
 
-### HU-REC-17 — Registrar servicios adicionales
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Cuenta y pagos | ALC-REC-06 | Alta | S | Pendiente |
+| Web privada | Estadía y cuenta | ALC-REC-05, ALC-REC-06 | 1 | M | Pendiente |
 
 **Historia**
 - **Como** recepcionista
-- **Quiero** agregar servicios consumidos a la cuenta del huésped
-- **Para** incluirlos en su cobro final
+- **Quiero** cobrar el saldo y registrar la salida del huésped
+- **Para** cerrar su estadía, facturar y liberar la habitación
 
 **Criterios de aceptación**
-1. Solo se pueden agregar cargos a cuentas abiertas (reserva `En estadía`).
-2. Se indica concepto (restaurante, lavandería, estacionamiento u otro), cantidad y precio unitario.
-3. El total del cargo se calcula automáticamente.
-4. El cargo queda registrado con fecha, hora y responsable y se ve al instante en la app del huésped.
-5. Un cargo registrado por error se anula con un motivo; no se elimina.
+1. Solo se puede hacer check-out de reservas `En estadía`. Se muestra la cuenta completa y el saldo pendiente.
+2. Si hay un pedido de room service `En camino`, no se permite el check-out; se muestra un mensaje para esperar la entrega.
+3. **Pago único:** si hay saldo, se registra **un solo pago por el saldo total** (no se aceptan abonos) indicando el método (efectivo, tarjeta u otro) y una referencia opcional. Si el saldo ya es 0, no se pide pago.
+4. Se indica el NIT del comprador (validado con su dígito verificador; el último dígito puede ser "K") o se elige "Consumidor Final" (CF), y el nombre del comprador (por defecto, el del huésped). Si el NIT no es válido, no se puede continuar.
+5. Al confirmar, con el saldo exactamente en 0: se emite la factura (HU-REC-15), la reserva pasa a `Finalizada`, la cuenta a `Cerrada` y la habitación a `Libre` + `Sucia` (o `Fuera de servicio` si tiene una incidencia que impide su uso).
+6. También al confirmar: las solicitudes `Pendiente` o `En proceso` pasan a `Cancelada` y los pedidos `Nuevo` o `En preparación` pasan a `Cancelado` (sin cargo). Se registran fecha, hora y responsable.
+7. Todo ocurre en una sola operación: si algo falla (por ejemplo, un error al emitir la factura), no se registra el pago ni cambia ningún estado, y se muestra el motivo. Esto se refiere al pago que Recepción registra dentro del check-out; los pagos aprobados previamente, incluidos los de Stripe, se conservan.
+
+**Depende de:** HU-REC-13, HU-REC-15
+**Reglas relacionadas:** RN-FAC-005, RN-HAB-002, RN-HAB-004, RN-HAB-008, RN-LIM-009, RN-PAG-007, RN-PAG-013, RN-PAG-014, RN-RES-015, RN-RES-021, RN-RES-022, RN-RS-011 (documento 10)
+**Reemplaza a:** HU-REC-16, HU-REC-18 (v2)
+**Notas técnicas:** el check-out desde la app (HU-HUE-16) produce los mismos efectos; ambos deben usar el mismo servicio del backend. **Salida tarde:** si el huésped no hace el check-out a la hora de salida, no ocurre nada automático; Recepción lo hace cuando el huésped baje, sin cargo extra (este check-out no limita la fecha). Si la habitación tenía otra llegada, ese check-in queda bloqueado porque no está `Libre` + `Limpia` (V-03).
+
+---
+
+## Épica 5: Facturación
+
+### HU-REC-15 — Emitir la factura
+
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
+|---|---|---|---|---|---|
+| Web privada | Facturación | ALC-REC-15, ALC-TRA-05 | 1 | M | Pendiente |
+
+**Historia**
+- **Como** recepcionista
+- **Quiero** que se emita la factura de la cuenta del huésped al hacer el check-out
+- **Para** entregarle el documento de cobro de su estadía
+
+**Criterios de aceptación**
+1. La factura se emite **solo en el check-out** (desde Recepción, HU-REC-14, o desde la app, HU-HUE-16), con el saldo de la cuenta en 0. Hay una sola factura por cuenta: no se puede emitir una segunda.
+2. Usa el NIT (o "CF" — Consumidor Final) y el nombre del comprador indicados en el check-out.
+3. El número es el siguiente correlativo de la **serie fija** cargada en los datos iniciales, consecutivo y sin saltos.
+4. La factura muestra los datos del hotel, serie y número, fecha y hora, NIT y nombre del comprador, código de reserva, detalle de cargos (sin los anulados), total con la leyenda "IVA incluido" (sin desglose de impuestos) y los pagos de la cuenta (método y monto de cada uno), con la leyenda **"Factura de demostración — no válida ante la SAT"**.
+5. La factura queda `Emitida`; se genera el PDF, se guarda y se envía por correo al huésped.
+6. Una factura emitida no se modifica ni se anula.
+7. En Recepción, al emitirla se ofrece imprimirla de inmediato (HU-REC-16).
+
+**Depende de:** HU-ADM-08
+**Reglas relacionadas:** RN-FAC-001, RN-FAC-002, RN-FAC-004, RN-FAC-005, RN-FAC-008, RN-FAC-009, RN-TAR-005 (documento 10)
+**Reemplaza a:** HU-REC-24 (v2)
+**Notas técnicas:** es la historia base de facturación; la usan el check-out de Recepción y el de la app. El correlativo se asigna dentro de la misma transacción del check-out para evitar saltos. Los datos fiscales, la serie y el número inicial existen siempre desde el arranque (datos iniciales), así que no hay bloqueo por "faltan datos de facturación".
+
+---
+
+### HU-REC-16 — Imprimir la factura
+
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
+|---|---|---|---|---|---|
+| Web privada | Facturación | ALC-REC-16 | 1 | S | Pendiente |
+
+**Historia**
+- **Como** recepcionista
+- **Quiero** imprimir la factura del huésped
+- **Para** entregársela en papel
+
+**Criterios de aceptación**
+1. Se puede elegir el formato: **ticket de 80 mm** (impresora térmica) u **hoja carta**.
+2. La impresión se lanza desde el navegador con una vista preparada para ese formato, sin menús ni botones de la pantalla.
+3. En el formato de 80 mm el contenido cabe en el ancho del papel, sin cortes, y los montos quedan alineados.
+4. Se puede imprimir de nuevo desde el detalle de la reserva cuantas veces se quiera; todas las impresiones son iguales (sin marca "COPIA") e imprimir no cambia el estado de la factura.
+5. Si la reserva no tiene una factura `Emitida`, la opción de imprimir no aparece.
 
 **Depende de:** HU-REC-15
+**Reglas relacionadas:** RN-FAC-007 (documento 10)
+**Reemplaza a:** HU-REC-25 (v2)
+**Notas técnicas:** CSS de impresión (`@media print` y `@page`) con tamaños para 80 mm y carta. No requiere un controlador especial de impresora.
 
 ---
 
-### HU-REC-18 — Registrar pagos
+## Épica 6: Mantenimiento
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+### HU-REC-17 — Reportar un daño en una habitación
+
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Cuenta y pagos | ALC-REC-06 | Alta | S | Pendiente |
+| Web privada | Mantenimiento | ALC-MYL-07 | 1 | S | Pendiente |
 
 **Historia**
 - **Como** recepcionista
-- **Quiero** registrar los pagos que hace el huésped en recepción
-- **Para** mantener actualizado el saldo de su cuenta
-
-**Criterios de aceptación**
-1. Se muestra el total de la cuenta, el monto pagado y el saldo pendiente.
-2. Se indica el monto y el método de pago (efectivo, tarjeta u otro) y una referencia opcional.
-3. El monto debe ser mayor a cero y no puede superar el saldo pendiente.
-4. El pago queda registrado con fecha, hora y responsable, y el saldo se actualiza.
-
-**Reglas relacionadas:** RN-PAG-003
-**Depende de:** HU-REC-19
-
----
-
-### HU-REC-19 — Consultar la cuenta del huésped
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Cuenta y pagos | ALC-REC-06 | Alta | S | Pendiente |
-
-**Historia**
-- **Como** recepcionista
-- **Quiero** ver todos los cargos y pagos de una reserva
-- **Para** informar al huésped cuánto debe pagar
-
-**Criterios de aceptación**
-1. Se muestra el cargo por alojamiento con el detalle por noche.
-2. Se muestran los cargos adicionales (room service, servicios) con fecha, concepto y monto.
-3. Se muestran los pagos (en línea, en recepción y del canal) y los reembolsos.
-4. Se muestra el saldo pendiente en quetzales.
-
-**Depende de:** HU-REC-15
-
----
-
-### HU-REC-20 — Generar comprobante de pago
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Cuenta y pagos | ALC-REC-07 | Media | M | Pendiente |
-
-**Historia**
-- **Como** recepcionista
-- **Quiero** generar un comprobante de pago en PDF
-- **Para** entregárselo al huésped como evidencia
-
-**Criterios de aceptación**
-1. El comprobante incluye datos del hotel, datos del huésped, código de reserva, conceptos cobrados, total, monto pagado, método de pago y fecha.
-2. Se puede descargar en PDF y enviar por correo al huésped.
-3. Cada comprobante tiene un número correlativo único.
-4. El comprobante indica que no es una factura electrónica.
-
-**Depende de:** HU-REC-18
-
----
-
-## Épica 6: Solicitudes y comunicación
-
-### HU-REC-21 — Registrar una solicitud de huésped y enviarla a un área
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Solicitudes | ALC-REC-11 | Media | S | Pendiente |
-
-**Historia**
-- **Como** recepcionista
-- **Quiero** registrar lo que un huésped pide en recepción y enviarlo al área correcta
-- **Para** que sea atendido a tiempo
-
-**Criterios de aceptación**
-1. La solicitud se asocia a una reserva `En estadía` y a su habitación.
-2. Se indica el tipo (limpieza o artículos), la descripción y la prioridad (normal o alta).
-3. La solicitud se crea en estado `Pendiente` y aparece de inmediato al personal de Limpieza.
-4. Recepción puede consultar el estado de la solicitud hasta que sea `Atendida`.
-
-**Notas técnicas:** es la misma solicitud que crea el huésped desde la app (HU-HUE-15, HU-HUE-16), con origen "Recepción".
-
----
-
-### HU-REC-22 — Reportar un daño en una habitación
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Solicitudes | ALC-REC-11 | Media | S | Pendiente |
-
-**Historia**
-- **Como** recepcionista
-- **Quiero** reportar un daño que me informa un huésped
+- **Quiero** reportar un daño que me informa un huésped o que detecto
 - **Para** que Mantenimiento lo repare
 
 **Criterios de aceptación**
-1. Se selecciona la habitación, el tipo de problema y se escribe una descripción.
-2. Se indica si el daño impide usar la habitación.
-3. Se crea una incidencia en estado `Reportada`, visible para el Administrador.
-4. Si el daño impide usar la habitación y está libre, pasa a `Fuera de servicio`.
-5. Si la habitación está ocupada, no pasa a `Fuera de servicio` automáticamente; se avisa para gestionar el cambio de habitación del huésped.
+1. Se selecciona la habitación, se escribe una descripción, se indica si el daño impide usar la habitación y se puede adjuntar una foto (opcional). Si falta la descripción, no se crea la incidencia.
+2. Se crea una incidencia `Reportada` con fecha, hora y quien la reportó, visible para Mantenimiento y para el Administrador (solo consulta).
+3. Si el daño impide usar la habitación y está `Libre`, pasa a `Fuera de servicio`. Si tenía reservas futuras asignadas, Recepción las ve en el calendario (HU-REC-08) y les cambia la habitación con HU-REC-07; no hay aviso automático.
+4. Si el daño impide usar la habitación y está `Ocupada`, no cambia su condición: muestra el indicador "Incidencia pendiente" (HU-REC-10) y se repara con el huésped alojado (no hay cambio de habitación). Al hacer el check-out pasa a `Fuera de servicio`.
+5. Si el daño no impide usar la habitación, su condición no cambia.
 
-**Reglas relacionadas:** RN-HAB-002, RN-MAN-001
-**Notas técnicas:** es la misma incidencia que crea el personal de Mantenimiento/Limpieza (HU-MYL-10).
-
----
-
-### HU-REC-23 — Recibir avisos en tiempo real
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Solicitudes | ALC-REC-14, ALC-TRA-04 | Media | S | Pendiente |
-
-**Historia**
-- **Como** recepcionista
-- **Quiero** recibir un aviso en pantalla cuando pase algo importante
-- **Para** reaccionar sin estar revisando la pantalla constantemente
-
-**Criterios de aceptación**
-1. Se muestra un aviso cuando llega una nueva reserva en línea o de un canal externo.
-2. Se muestra un aviso cuando un huésped hace check-out desde la app.
-3. Se muestra un aviso cuando una habitación con llegada hoy pasa a `Limpia`.
-4. Al hacer clic en el aviso se abre el detalle correspondiente.
+**Depende de:** HU-REC-10
+**Reglas relacionadas:** RN-HAB-006, RN-MAN-001 (documento 10)
+**Reemplaza a:** HU-REC-22 (v2)
+**Notas técnicas:** es la misma incidencia que crea el personal de Mantenimiento/Limpieza (HU-MYL-06).

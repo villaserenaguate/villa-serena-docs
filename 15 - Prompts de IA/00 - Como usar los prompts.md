@@ -1,96 +1,70 @@
-# 15 — Prompts de IA: cómo usarlos
+# 00 — Cómo usar los prompts (versión 3)
 
-> **Proyecto:** PMS Villa Serena
-> **Fecha:** 25 de septiembre de 2026
-> **Sirve para:** Claude Code, Antigravity y Codex (los prompts son los mismos para las tres)
+> **Para qué sirve:** guía corta para que cada integrante use su prompt con la IA sin salirse del plan.
+> **Basado en:** 13 — Plan de Trabajo y 14 — Tecnologías y Arquitectura.
 
 ---
 
-## 1. Qué hay en esta carpeta
+## 1. Antes de empezar (una sola vez)
 
-| Archivo | Qué es |
+1. Clona tu repositorio de la organización `villaserenaguate`.
+2. Copia `AGENTS.md` en la raíz del repositorio (si no está ya).
+3. Crea tu `.env` a partir de `.env.example`. **Nunca subas el `.env` ni pegues sus claves en un chat de IA.**
+4. Levanta los servicios locales desde `villa-serena-infra`: `docker compose -f docker-compose.dev.yml up -d`.
+
+## 2. Qué prompt usa cada persona (objetivo 0)
+
+| Prompt | Repositorio | Responsable | Horas | Cuándo |
+|---|---|---|---|---|
+| Preparar los 5 repositorios (sección 4 de esta guía, no es prompt) | Todos | Alex | 1 | Jue 1 (opcional) o Vie 2 |
+| OBJ-0A — Infra: Docker local | `villa-serena-infra` | Josué | 2 | Jue 1 (opcional) o Vie 2 |
+| OBJ-0B — API: proyecto base | `villa-serena-api` | Hugo | 2 | Jue 1 (opcional) o Vie 2 |
+| OBJ-0C — API: esquema y datos iniciales | `villa-serena-api` | Josué | 5 | Vie 2 y Lun 5 |
+| OBJ-0D — API: seguridad y JWT | `villa-serena-api` | Pablo | 4 | Vie 2 y Lun 5 |
+| OBJ-0E — Web: proyecto base y BFF | `villa-serena-web` | Alex (y Kim, diseño base) | 3,5 + 1 | Jue 1 (opcional), Vie 2 |
+| OBJ-0F — Móvil: proyecto base | `villa-serena-movil` | Carlos | 1 + 1 (push, Vie 2) | Jue 1 (opcional) y Vie 2 |
+
+**Orden en el API:** OBJ-0B (proyecto base) va primero. Josué y Pablo crean su rama a partir de `main` en cuanto el proyecto base esté fusionado; si todavía no lo está, parten de la rama de Hugo.
+
+El **contrato del API** (`openapi.yaml`, objetivos 0 a 2) se congela el viernes 2 y tiene su propio prompt aparte.
+
+## 3. Cómo usar un prompt
+
+1. Abre tu prompt (archivo `OBJ-0x`).
+2. Adjunta a la IA **solo** los documentos de la lista "Documentos que debes adjuntar".
+3. Copia el bloque del prompt y pégalo en tu herramienta de IA, **dentro de tu repositorio**.
+4. Pide que primero muestre el plan. Revísalo: si propone algo que no está en el prompt, dile que lo quite.
+5. Deja que avance en pasos pequeños. Prueba cada paso.
+6. Al final, comprueba los puntos de "Cómo saber que quedó terminado".
+7. Haz un pull request pequeño a `main` y avisa al grupo.
+
+## 4. Preparar los 5 repositorios (Alex, 1 h)
+
+Organización: `villaserenaguate`. Repositorios: `villa-serena-docs`, `villa-serena-infra`, `villa-serena-api`, `villa-serena-web` y `villa-serena-movil`.
+
+En cada uno:
+
+1. `README.md` con una línea de qué contiene y cómo se arranca (comandos del documento 14, sección 8).
+2. `.gitignore` adecuado (Java/Maven, Node/Next.js o Expo) que incluya `.env`.
+3. `.env.example` vacío o con los nombres de variables que se conozcan.
+4. `AGENTS.md` (este paquete).
+5. **Proteger `main`:** Settings → Branches → regla para `main` con "Require a pull request before merging" (1 aprobación).
+6. Dar acceso de escritura a los 6 integrantes.
+
+## 5. Cómo revisar lo que entrega la IA
+
+| Revisa | Señal de problema |
 |---|---|
-| `AGENTS.md` | Contexto permanente del proyecto. Va en la **raíz del repositorio** |
-| `CLAUDE.md` | Una línea (`@AGENTS.md`) para que Claude Code lea el mismo contexto. Va en la raíz |
-| `OBJ-01 … OBJ-19` | Un archivo por objetivo, con uno o varios prompts listos para copiar |
+| ¿Solo hizo lo que pide el prompt? | Pantallas, campos o validaciones nuevas que no están en los documentos |
+| ¿Respetó las versiones? | Cambió Spring Boot, Next.js o Expo de versión |
+| ¿Hay secretos en el código? | Claves, contraseñas o tokens escritos en archivos que se suben |
+| ¿Tocó piezas compartidas? | Creó migraciones (si no eres Josué) o cambió `openapi.yaml` sin avisar |
+| ¿Funciona en local? | Los pasos de "Cómo saber que quedó terminado" fallan |
 
-Cada archivo de objetivo tiene:
+## 6. Si la IA propone algo fuera del alcance
 
-1. **Datos del objetivo:** paquete, dependencias y rama sugerida.
-2. **Antes de empezar:** lo que una persona debe tener listo (cuentas, objetivos previos).
-3. **Prompts:** bloques para copiar y pegar **completos**, uno por sesión. Los objetivos grandes tienen varios prompts (A, B, C…) que se ejecutan **en orden**.
-4. **Revisión humana:** qué verificar antes de aprobar el pull request.
+Respóndele: *"No lo agregues. El hotel es ficticio y el alcance está cerrado; implementa solo lo que pide el prompt."* Si crees que de verdad hace falta, avísalo en la reunión diaria; no lo implementes por tu cuenta.
 
----
+## 7. Si te atrasas
 
-## 2. Preparación (una sola vez, día 1)
-
-1. Ejecutar **OBJ-04, prompt A**: convierte el repositorio en monorepo, copia la documentación a `docs/` y coloca `AGENTS.md` y `CLAUDE.md` en la raíz.
-2. En paralelo, quien tenga P3 empieza los **pasos manuales de OBJ-03** (crear cuentas, comprar el dominio).
-3. Después de eso, cada persona puede empezar su primer objetivo.
-
-**Orden recomendado de inicio:** OBJ-04 (A) → OBJ-01 → OBJ-02 → OBJ-06 → resto según dependencias (documento 13, sección 9).
-
----
-
-## 3. Cómo ejecutar un prompt
-
-1. **Actualiza tu copia:** `git checkout develop && git pull`.
-2. **Crea la rama** indicada en el archivo del objetivo.
-3. **Abre la raíz del repositorio** en tu herramienta de IA:
-   - **Claude Code:** ejecuta `claude` en la terminal, dentro de la carpeta del repositorio.
-   - **Codex:** abre la carpeta del repositorio (CLI, IDE o app de Codex).
-   - **Antigravity:** abre la carpeta del repositorio como espacio de trabajo.
-4. **Pega el prompt completo** (todo lo que está dentro del bloque).
-5. **Revisa el plan** que te propone la IA antes de dejarla programar. Si algo no coincide con la documentación, corrígela.
-6. **Revisa los cambios** (diff) y las pruebas antes de hacer commit.
-7. **Abre un pull request** hacia `develop` con los IDs de HU y la checklist de "Definición de Hecho".
-
-**Un prompt = una sesión nueva.** No encadenes varios prompts en la misma conversación: la IA pierde precisión cuando el contexto crece demasiado.
-
----
-
-## 4. Consejos por herramienta (opcionales)
-
-| Herramienta | Consejo |
-|---|---|
-| Claude Code | Pide que planifique primero (modo plan) en los prompts grandes. Usa `/clear` entre prompts |
-| Codex | Pide explícitamente "muestra el plan antes de editar" si trabajas en modo automático |
-| Antigravity | Aprovecha su navegador para que pruebe las pantallas web al final de cada prompt de interfaz |
-
-**Útil para cualquier herramienta:** conectar el **MCP de Supabase** (en modo solo lectura sobre el proyecto de desarrollo) permite a la IA consultar el esquema real.
-
----
-
-## 5. Reglas para el equipo
-
-- **Nunca pegues claves secretas en el chat de la IA.** Las claves van en `.env.local`, que no se sube a Git.
-- **La IA propone, ustedes aprueban.** Todo pasa por pull request con revisión de al menos un compañero.
-- **Si la IA quiere cambiar una regla de negocio o un estado, detente.** Esos cambios se discuten con el equipo y se actualizan primero en `docs/`.
-- **Frontend de Kim:** si ya existen pantallas, agrega al inicio del prompt: *"Ya existen pantallas en `<ruta>`. Reutilízalas y conéctalas; no las rehagas desde cero."*
-
----
-
-## 6. Índice de prompts
-
-| Objetivo | Paquete | Prompts |
-|---|---|---|
-| OBJ-01 Base de datos | P1 | A (modelo y migraciones), B (seed y pruebas) |
-| OBJ-02 Autenticación y permisos | P1 | A (auth y perfiles), B (RLS y storage) |
-| OBJ-03 Infraestructura | P3 | Pasos manuales + A |
-| OBJ-04 Repositorio y CI/CD | P3 | A (monorepo), B (pipelines), C (tablero de HU) |
-| OBJ-05 Base del frontend web | P4 | A |
-| OBJ-06 Backend de reservas | P2 | A (disponibilidad, precio, crear), B (modificar, cancelar, cuenta), C (check-in/out y transiciones) |
-| OBJ-07 Pagos, correos y procesos | P2 | A (Stripe), B (correos y PDF), C (pg_cron y alertas) |
-| OBJ-08 Web pública | P5 | A (explorar), B (reservar y pagar), C (mi reserva) |
-| OBJ-09 Recepción | P4 | A (reservas), B (día y Gantt), C (habitaciones y estadía), D (cuenta y solicitudes) |
-| OBJ-10 Admin: catálogos y tarifas | P1 | A (catálogos y configuración), B (tarifas) |
-| OBJ-11 Admin: personal, inventario, supervisión | P3 | A (personal y turnos), B (inventario), C (mantenimiento e indicadores) |
-| OBJ-12 Room Service | P5 | A |
-| OBJ-13 Mantenimiento y Limpieza | P6 | A (limpieza y solicitudes), B (reportes y mantenimiento) |
-| OBJ-14 App: base y estadía | P6 | A (proyecto y acceso), B (estadía, cuenta y APK) |
-| OBJ-15 App: servicios y check-out | P6 | A (room service y solicitudes), B (pago y check-out) |
-| OBJ-16 Channel Manager | P2 | A (diseño y API), B (canal simulado) |
-| OBJ-17 Pruebas integrales | P3 | A |
-| OBJ-18 Backups | P1 | A |
-| OBJ-19 Documentación y demo | Todos | A |
+No trabajes más de 3 h en un día seguro. Avisa en la reunión diaria qué quedó pendiente; el martes 6 se decide si se aplica algún recorte de reserva (documento 13, sección 9.2).

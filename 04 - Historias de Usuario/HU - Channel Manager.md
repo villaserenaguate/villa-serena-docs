@@ -1,99 +1,51 @@
-# HU — Channel Manager
+# HU — Channel Manager (versión 3)
 
-> **Actores:** Administrador (`ADMIN`), Recepcionista (`RECEPCION`) y Canal externo (`CANAL`, actor no humano)
-> **Plataformas:** Web privada y API
+> **Rol:** Canal externo (actor no humano, por API), Administrador (`ADMIN`, canal simulado) y Recepción (`RECEPCION`, ve el canal de origen)
+> **Plataforma:** API y Web privada
 > **Prefijo:** `HU-CM`
-> **Total de historias:** 5
-> **Referencias:** 01 — Alcance (sección D, decisión D-05) · 02 — Definición de Roles (sección 4)
-
-Este archivo es **nuevo**. El enunciado pide *"preparar el sistema para conectarse con un Channel Manager (Booking, Expedia)"*. Estas historias implementan esa preparación contra un **canal simulado**. La conexión real queda en Fase 2 (F2-10).
-
-**ALC-CM-01** (documento de diseño de la integración) no es una historia de usuario. Es un entregable técnico de Arquitectura (Josué) y se elabora en el paso de tecnologías.
+> **Total de historias:** 3 (Nivel 1: 3 · Nivel 2: 0)
+> **Referencias:** Documentación V3 / 01 — Alcance (sección D)
+> **Numeración:** nueva en la versión 3. La correspondencia con la versión 2 está en cada historia ("Reemplaza a") y en el índice.
 
 ---
 
-## Épica 1: Configuración de canales
+## Épica 1: Recepción de reservas externas
 
-### HU-CM-01 — Registrar un canal y generar su clave de acceso
+### HU-CM-01 — Recibir una reserva de un canal externo
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Configuración de canales | ALC-CM-03 | Media | S | Pendiente |
+| API | Recepción de reservas externas | ALC-CM-03 | 1 | M | Pendiente |
 
 **Historia**
-- **Como** administrador
-- **Quiero** registrar un canal externo y generar su clave de API
-- **Para** que solo los canales autorizados puedan enviar reservas
-
-**Criterios de aceptación**
-1. Se registra un canal (Booking o Expedia) con su estado (activo o inactivo); cada canal corresponde a un canal de origen (`BOOKING` o `EXPEDIA`).
-2. El sistema genera una clave de API única por canal y la muestra **una sola vez**.
-3. La clave se puede regenerar; la anterior deja de funcionar de inmediato.
-4. Un canal inactivo no puede enviar reservas.
-5. Se muestra la cantidad de reservas recibidas por cada canal.
-6. El canal simulado (HU-CM-05) usa las claves de estos canales; no se registra como un canal aparte.
-
-**Notas técnicas:** la clave se guarda cifrada (hash), nunca en texto plano.
-
----
-
-## Épica 2: Recepción de reservas externas
-
-### HU-CM-02 — Recibir una reserva desde un canal externo
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| API | Recepción de reservas externas | ALC-CM-03 | Alta | L | Pendiente |
-
-**Historia**
-- **Como** canal externo
-- **Quiero** enviar una reserva al sistema del hotel por API
+- **Como** canal externo (Booking o Expedia)
+- **Quiero** enviar una reserva al hotel por la API
 - **Para** que la reserva hecha en mi plataforma quede registrada en Villa Serena
 
 **Criterios de aceptación**
-1. La API acepta una reserva con: identificador externo, tipo de habitación, fechas, número de huéspedes, datos del huésped principal y monto.
-2. La petición debe incluir una clave de API válida de un canal activo; si no, se rechaza.
-3. El sistema valida la disponibilidad con las mismas reglas que la web pública; si no hay, rechaza la reserva con un error claro.
-4. Si llega de nuevo una reserva con el mismo identificador externo y canal, **no** se duplica; se responde con la reserva ya existente.
-5. La reserva se crea en estado `Confirmada`, con el canal de origen y un código propio; el cargo por alojamiento es el **monto enviado por el canal** y se registra un pago `Aprobado` con método `CANAL` por ese monto, porque el canal ya cobró al huésped.
-6. Cada petición recibida (aceptada o rechazada) queda registrada con fecha, canal y resultado.
-7. La API está documentada con OpenAPI.
+1. La API recibe: identificador externo, tipo de habitación, fecha de entrada y de salida, número de huéspedes, datos del huésped principal y monto total en quetzales. Los datos del huésped son los mismos 6 de Recepción y de la web, todos obligatorios: nombre completo, correo, teléfono, nacionalidad, tipo de documento (DPI o pasaporte) y número de documento. Si ya existe un huésped con ese correo, la reserva se asocia a ese perfil sin cambiar sus datos.
+2. Cada petición incluye el canal y su clave; el sistema compara la clave con la guardada con hash. Si el canal no existe o la clave es incorrecta, responde `401` y no crea nada.
+3. Si faltan datos o no cumplen las reglas (estadía de 1 a 30 noches, sin fechas pasadas ni a más de 365 días, huéspedes dentro de la capacidad del tipo, tipo activo), responde `400` indicando el problema.
+4. Valida la disponibilidad con las mismas reglas que la web pública; si no hay, responde `409` con un mensaje claro.
+5. Si ya existe una reserva con el mismo identificador externo del mismo canal, responde `200` con la reserva existente y no crea otra.
+6. Si todo es válido, crea la reserva `Confirmada` con su código propio (ej. `VS-7K2M9Q`), el canal de origen y el identificador externo; la cuenta se crea con un cargo por alojamiento igual al monto del canal y un pago `Aprobado` con método "Canal" por ese mismo monto. Responde `201` con el código.
+7. Se envía al huésped el correo de confirmación con el código de reserva y el enlace de la app.
+8. La API está documentada con OpenAPI, con ejemplos de cada respuesta.
 
-**Reglas relacionadas:** RN-RES-001, RN-RES-002, RN-TAR-010, RN-PAG-008, RN-CM-003, RN-CM-004
-**Depende de:** HU-CM-01
-
----
-
-### HU-CM-03 — Recibir la cancelación de una reserva externa
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| API | Recepción de reservas externas | ALC-CM-03 | Media | M | Pendiente |
-
-**Historia**
-- **Como** canal externo
-- **Quiero** notificar al hotel que una reserva fue cancelada en mi plataforma
-- **Para** que la habitación se libere en Villa Serena
-
-**Criterios de aceptación**
-1. La API recibe la cancelación con el identificador externo de la reserva y una clave de API válida.
-2. Solo el canal que creó la reserva puede cancelarla.
-3. Solo se cancelan reservas `Confirmada`; si ya está `En estadía` o `Finalizada`, se rechaza con un error claro.
-4. La reserva pasa a `Cancelada` con motivo "Cancelada por el canal" y la habitación se libera.
-5. Si la cancelación llega dos veces, la segunda no produce cambios ni errores.
-
-**Reglas relacionadas:** RN-RES-004
-**Depende de:** HU-CM-02
+**Depende de:** HU-REC-04
+**Reglas relacionadas:** RN-CM-001, RN-CM-003, RN-CM-004, RN-NOT-005, RN-PAG-008, RN-PAG-009, RN-PAG-014, RN-RES-001, RN-RES-005, RN-RES-006, RN-RES-007, RN-RES-009, RN-RES-010, RN-RES-011, RN-RES-019, RN-TAR-008, RN-TAR-009, RN-TAR-010 (documento 10)
+**Reemplaza a:** HU-CM-02 (v2)
+**Notas técnicas:** reutiliza la lógica de disponibilidad y creación de reservas. Las reservas del canal no se cancelan desde el sistema en la versión 1.
 
 ---
 
-## Épica 3: Visibilidad del canal
+## Épica 2: Visibilidad del canal
 
-### HU-CM-04 — Identificar el canal de origen de cada reserva
+### HU-CM-02 — Ver el canal de origen de las reservas
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Visibilidad del canal | ALC-CM-02 | Alta | S | Pendiente |
+| Web privada | Visibilidad del canal | ALC-CM-02 | 1 | S | Pendiente |
 
 **Historia**
 - **Como** recepcionista
@@ -101,35 +53,48 @@ Este archivo es **nuevo**. El enunciado pide *"preparar el sistema para conectar
 - **Para** atender correctamente al huésped y conocer de dónde vienen las reservas
 
 **Criterios de aceptación**
-1. Toda reserva tiene un canal de origen: `Directo web`, `Recepción`, `Booking` o `Expedia`.
-2. El canal se muestra en el detalle de la reserva, en las búsquedas y como ícono en el calendario Gantt.
-3. Las reservas de canales externos muestran también su identificador externo.
-4. Se puede filtrar la búsqueda de reservas por canal.
-5. Recepción recibe un aviso en pantalla cuando llega una reserva de un canal externo.
+1. Toda reserva tiene un canal de origen: Directo web, Recepción, Booking o Expedia; se asigna automáticamente al crearla y no se puede editar.
+2. El canal se muestra en el detalle de la reserva y en los resultados de búsqueda (HU-REC-06), y se puede filtrar la búsqueda por canal.
+3. En el calendario Gantt (HU-REC-08), las reservas de canales externos se distinguen con un ícono o etiqueta.
+4. Las reservas de Booking o Expedia muestran también su identificador externo.
+5. Las reservas de un canal externo no muestran la opción de cancelar; si se intenta por otra vía, el sistema responde "Las reservas de canal no se cancelan desde el sistema".
 
-**Depende de:** HU-CM-02, HU-REC-08, HU-REC-11
+**Depende de:** HU-CM-01, HU-REC-06, HU-REC-08
+**Reglas relacionadas:** RN-CAN-012, RN-RES-010, RN-SEG-006 (documento 10)
+**Reemplaza a:** HU-CM-04 (v2)
 
 ---
 
-## Épica 4: Canal simulado
+## Épica 3: Canal simulado
 
-### HU-CM-05 — Enviar reservas de prueba desde el canal simulado
+### HU-CM-03 — Enviar reservas de prueba con el canal simulado
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Canal simulado | ALC-CM-04 | Alta | M | Pendiente |
+| Web privada | Canal simulado | ALC-CM-04 | 1 | M | Pendiente |
 
 **Historia**
 - **Como** administrador
-- **Quiero** generar reservas de prueba desde un canal simulado
-- **Para** demostrar que el sistema está preparado para integrarse con Booking o Expedia
+- **Quiero** enviar reservas de prueba desde un canal simulado
+- **Para** demostrar que el sistema está preparado para recibir reservas de Booking o Expedia
 
 **Criterios de aceptación**
-1. Existe una pantalla (o herramienta separada) que imita a un canal externo.
-2. Se puede elegir el canal a simular (Booking o Expedia), el tipo de habitación, las fechas y los datos del huésped, o generarlos al azar.
-3. La reserva se envía **a través de la API real** (HU-CM-02), usando la clave del canal.
-4. Se muestra la respuesta de la API (aceptada o rechazada, y el motivo).
-5. Se puede enviar la cancelación de una reserva simulada (HU-CM-03).
-6. Se puede reenviar la misma reserva para demostrar que no se duplica.
+1. Existe una pantalla en el panel del Administrador; otros roles no la ven y reciben "Acceso denegado" si intentan entrar.
+2. Se elige el canal (Booking o Expedia), el tipo de habitación, las fechas, el número de huéspedes, los 6 datos del huésped (HU-CM-01) y el monto, o se generan todos los datos de prueba al azar con un identificador externo nuevo.
+3. La reserva se envía **a través de la API real** (HU-CM-01), con la clave del canal elegido.
+4. Se muestra la respuesta de la API: código HTTP, resultado (aceptada o rechazada), motivo y, si se creó, el código de reserva.
+5. Si la API rechaza la reserva (sin disponibilidad o datos inválidos), se muestra el motivo y no se crea nada.
+6. Se puede reenviar la misma reserva (mismo identificador externo) para demostrar que no se duplica: la API responde con la reserva existente.
+7. La reserva creada aparece en la búsqueda de Recepción y en el Gantt con su canal de origen.
 
-**Depende de:** HU-CM-02, HU-CM-03
+**Depende de:** HU-CM-01
+**Reglas relacionadas:** RN-CM-004, RN-CM-007, RN-CM-009 (documento 10)
+**Reemplaza a:** HU-CM-05 (v2)
+**Notas técnicas:** el simulador lee las claves en texto plano de sus propias variables de entorno (la base de datos solo guarda el hash). No envía cancelaciones.
+
+---
+
+## Notas
+
+- **ALC-CM-01** (documento de diseño de la integración: cómo se conectaría a Booking o Expedia en el futuro) es un entregable técnico, no una historia de usuario.
+- Los canales (Booking y Expedia) y sus claves se cargan en la **configuración inicial** del sistema; no hay pantalla de administración de canales.

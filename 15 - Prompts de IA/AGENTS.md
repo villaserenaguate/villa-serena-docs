@@ -1,124 +1,82 @@
-# AGENTS.md — PMS Villa Serena
+# AGENTS.md — Reglas para la IA en los repositorios de Villa Serena
 
-> Este archivo va en la **raíz del repositorio**. Lo leen automáticamente Codex y Antigravity; Claude Code lo lee mediante `CLAUDE.md`.
-> Es el contexto permanente del proyecto: **léelo completo antes de cualquier tarea.**
+> Copia este archivo en la raíz de **cada uno de los 5 repositorios**. Las herramientas de IA (Claude Code, Codex, Copilot, Cursor) lo leen como instrucciones del proyecto. Si tu herramienta usa otro nombre (por ejemplo, `CLAUDE.md`), crea una copia con ese nombre.
 
 ---
 
 ## 1. Qué es el proyecto
 
-Sistema de Administración de Propiedades (PMS) para **Villa Serena**, un hotel boutique **ficticio** (proyecto universitario). Tiene tres partes:
+PMS (sistema de administración hotelera) para el hotel boutique **ficticio** "Villa Serena". Proyecto final del curso de Desarrollo Web.
 
-1. **Web pública** (motor de reservas): el cliente busca, reserva y paga sin crear cuenta.
-2. **Panel privado** (web): Recepción, Room Service, Mantenimiento/Limpieza y Administración.
-3. **App Android** para el huésped: estadía, room service, solicitudes, amenidades, cuenta, pago y check-out.
+- **Hito:** sábado 10 de octubre de 2026. El flujo principal debe funcionar **en local con Docker**: reservar → check-in → estadía (app) → operación → check-out con factura.
+- **No hay producción todavía:** sin VPS, Cloudflare, CI/CD ni backups hasta después del hito.
+- **El hotel es ficticio:** sin dinero real (Stripe en modo prueba), sin facturación ante la SAT, sin huéspedes reales.
 
-Un solo hotel · moneda **quetzales (GTQ)** · idioma **español** · zona horaria **America/Guatemala (UTC-6)** · pagos solo en **Stripe sandbox** (nunca dinero real).
+## 2. Reglas de trabajo para la IA
 
----
+1. **Idioma:** responde, explica y comenta en **español**. El código, los nombres de clases, variables y endpoints técnicos van en inglés o en español según la convención del documento 14 (rutas `/api/v1/...`, paquete `gt.villaserena`).
+2. **No inventes alcance.** Implementa **solo** lo que pide el prompt del objetivo y los documentos adjuntos. No agregues pantallas, estados, validaciones, campos ni dependencias "por si acaso". Si algo parece faltar, **pregunta** antes de agregarlo.
+3. **Primero el plan, después el código.** Antes de escribir, muestra un plan corto (archivos a crear o cambiar). Trabaja en pasos pequeños y verificables.
+4. **Los documentos mandan.** Si el prompt y un documento se contradicen, gana el documento y avisa de la contradicción.
+5. **Versiones fijas** (no las cambies sin que el equipo lo apruebe):
 
-## 2. Documentación (fuente de verdad)
-
-Toda la documentación está en `docs/`. **Antes de programar, lee los documentos que indique la tarea.** Si el código y la documentación no coinciden, la documentación manda; si la documentación es ambigua o contradictoria, **detente y pregunta** en lugar de inventar.
-
-| Documento | Para qué sirve |
+| Pieza | Versión |
 |---|---|
-| `docs/01 - Alcance del Proyecto.md` | Qué entra en la versión 1 y qué es **Fase 2 (no construir)** |
-| `docs/02 - Definicion de Roles.md` | Los 5 roles, sus códigos y responsabilidades |
-| `docs/04 - Historias de Usuario/` | Las 96 historias (HU) con criterios de aceptación |
-| `docs/07 - Estados.md` | **Códigos exactos** de estado, transiciones permitidas y efectos automáticos |
-| `docs/08 - Inventario Turnos y Personal.md` | Inventario, turnos y reglas de personal |
-| `docs/09 - Matriz de Permisos.md` | Qué puede hacer cada rol (base de las políticas RLS) |
-| `docs/10 - Reglas de Negocio.md` | 142 reglas (RN-…) y 21 parámetros (PAR-…) |
-| `docs/11 - Requisitos Funcionales.md` | Requisitos por módulo |
-| `docs/12 - Casos de Uso.md` | Flujos completos con casos alternativos |
-| `docs/13 - Objetivos del Proyecto.md` | Los 19 objetivos de trabajo (OBJ-01 a OBJ-19) |
-| `docs/14 - Tecnologias y Arquitectura.md` | Stack, estructura, ambientes y requisitos no funcionales |
+| Backend | Spring Boot **4.1**, Java **21**, Maven |
+| Base de datos | PostgreSQL **17**, Flyway |
+| Web | Next.js **15** (App Router), React 19, TypeScript, Tailwind 4, shadcn/ui |
+| App | React Native con Expo **SDK 54**, Expo Router |
+| Gestor de paquetes JS | pnpm |
 
-**Prioridad si hay conflicto:** 10 (Reglas) > 07 (Estados) > 09 (Permisos) > 04 (HU) > resto.
+   Spring Boot 4 usa los starters `spring-boot-starter-webmvc`, `spring-boot-starter-security-oauth2-resource-server` y `spring-boot-starter-flyway`.
 
----
+6. **Zona horaria:** las fechas se guardan en UTC y se muestran o calculan en **America/Guatemala** (AD-19).
+7. **Pruebas mínimas:** cada cambio debe poder demostrarse con los pasos de "Cómo saber que quedó terminado" de su prompt.
 
-## 3. Stack (no agregar otros lenguajes ni frameworks)
+## 3. Seguridad (obligatorio)
 
-| Parte | Tecnología |
+- **Nunca subir secretos a Git. Los secretos van solo en un `.env` fuera de Git o en GitHub Secrets. Nunca pegar claves secretas en un chat de IA.**
+- En el repositorio solo va `.env.example`, con los nombres de las variables y valores de ejemplo, nunca reales.
+- `.env` debe estar en `.gitignore` desde el primer commit.
+- Si necesitas una clave para probar, usa un marcador (`<TU_CLAVE>`) y pide al integrante que la ponga en su `.env`.
+
+## 4. Git
+
+- **Nunca trabajes directo en `main`.** Una rama por tarea, por ejemplo `obj0-seguridad-jwt`.
+- Pull requests pequeños, con una descripción corta de qué se hizo y cómo se probó.
+- Mensajes de commit en español, cortos: `obj0: agrega login del personal`.
+
+## 5. Piezas compartidas (no tocar sin coordinar)
+
+| Pieza | Regla |
 |---|---|
-| Web (`apps/web`) | Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · shadcn/ui · TanStack Query y Table · React Hook Form + Zod · date-fns + `@date-fns/tz` · `@supabase/ssr` |
-| App (`apps/mobile`) | React Native + **Expo SDK 54** · Expo Router · NativeWind · `@supabase/supabase-js` + `expo-secure-store` · TanStack Query · React Hook Form + Zod · `expo-web-browser` + `expo-linking` |
-| Compartido (`packages/shared`) | Tipos generados de Supabase · esquemas Zod · códigos y etiquetas de estado · **sin dependencias de React** |
-| Backend | **Supabase**: PostgreSQL · RLS · Auth (contraseña para personal, OTP por correo para huésped) · Realtime · Storage · pg_cron · funciones SQL (RPC) y triggers |
-| API con secretos | Route Handlers de Next.js en `apps/web/src/app/api/` (Stripe, correos, PDF, API del canal, creación de empleados) |
-| Servicios | Stripe (sandbox) · Resend + React Email · `@react-pdf/renderer` · Sentry · Vercel |
-| Calidad | Vitest · Playwright · pgTAP (`supabase test db`) · ESLint + Prettier |
-| Monorepo | pnpm workspaces |
+| Migraciones de Flyway | **Solo Josué** las crea. Si necesitas una tabla o columna, pídela; no crees archivos `V*__*.sql` |
+| `openapi.yaml` (contrato del API) | Los cambios pasan por **Josué** y se avisan al grupo. La web y la app copian el archivo y generan sus tipos |
+| Spring Security | Lo arma **Pablo**; los demás solo agregan reglas de sus rutas |
+| Cliente de tiempo real de la web | Lo arma **Alex**; los demás lo reutilizan |
 
-Lenguajes permitidos: **TypeScript** y **SQL**. Nada más.
+## 6. Sección por repositorio
 
----
+### villa-serena-infra
+- Contiene `docker-compose.dev.yml` (PostgreSQL 17, Mailpit, MinIO, Prometheus y Grafana), la configuración de Prometheus, el tablero de Grafana y `.env.example`.
+- Comando: `docker compose -f docker-compose.dev.yml up -d`.
+- No agregues el API, la web ni la app a Docker en el hito: corren en la computadora de cada integrante.
 
-## 4. Estructura del repositorio
+### villa-serena-api
+- Spring Boot 4.1, paquete raíz `gt.villaserena`, módulos según el documento 14 (sección 7).
+- Endpoints bajo `/api/v1/...`. Cada rol recibe un **DTO** con solo lo que puede ver; nunca se devuelve la entidad.
+- Las reglas viven en Spring y en la base de datos, no solo en la interfaz (documento 14, sección 5).
+- Comando: `./mvnw spring-boot:run` (Flyway crea las tablas y carga los datos iniciales).
 
-```
-apps/web/          Next.js: (publico), (panel)/panel/{recepcion,room-service,piso,admin}, api/, login/
-apps/mobile/       Expo: app/ (Expo Router), components/, lib/, eas.json
-packages/shared/   Tipos, Zod, estados
-supabase/          migrations/, tests/ (pgTAP), seed.sql
-tests/             Vitest y Playwright
-docs/              Documentación definitiva, OpenAPI, diagramas
-.github/workflows/ CI/CD
-```
+### villa-serena-web
+- Next.js 15 como **BFF**: el navegador solo habla con Next.js; los tokens van en cookies httpOnly y nunca llegan al navegador (documento 14, sección 6.1).
+- Tipos del API generados con `openapi-typescript` desde la copia local de `openapi.yaml`.
+- Comando: `pnpm dev` (http://localhost:3000).
 
----
+### villa-serena-movil
+- Expo SDK 54 + Expo Router. La app llama **directo** a Spring con su propio JWT guardado en `expo-secure-store` (no usa el BFF).
+- Pruebas rápidas con **Expo Go de SDK 54** (se instala desde expo.dev/go, no desde la Play Store). Push solo con el development build.
+- Comando: `npx expo start`.
 
-## 5. Reglas que nunca se rompen
-
-1. **Códigos de estado exactos** del documento 07 (`PENDIENTE_PAGO`, `EN_ESTADIA`, `FUERA_DE_SERVICIO`…) en base de datos, backend, web, app y pruebas. En pantalla se muestran con las **etiquetas** del documento 07.
-2. **La base de datos decide.** Las reglas críticas van en restricciones, triggers o funciones SQL (RPC). La interfaz también valida, pero solo para dar buena experiencia de usuario.
-3. **RLS activado en todas las tablas.** Ninguna tabla queda sin políticas. Los permisos siguen el documento 09.
-4. **Transiciones de estado:** solo las del documento 07; cualquier otra se rechaza. Todo cambio de estado se registra en el **historial de estados** con actor, fecha, hora y motivo.
-5. **No se borra información de negocio:** los empleados se desactivan, los cargos se anulan con motivo, los catálogos se desactivan.
-6. **Secretos:** nunca en Git. La clave `service_role`, Stripe y Resend solo en variables de entorno del servidor. Nunca en la web del navegador ni en la app.
-7. **Dinero:** columnas `numeric(10,2)` en quetzales. Nada de `float`.
-8. **Fechas:** se guardan en UTC (`timestamptz`); las fechas de estadía son `date`. Se muestran en America/Guatemala.
-9. **Migraciones:** todo cambio de base de datos es una migración nueva en `supabase/migrations/`. **Nunca edites una migración ya fusionada en `develop`.** Después de cambiar el esquema, regenera los tipos en `packages/shared`.
-10. **Fase 2 no se construye:** domótica, llaves digitales, firma digital, chat, notificaciones push, FEL, fidelidad, spa con aforo, conexión real con Booking/Expedia, arrastrar en el Gantt, tarifas por ocupación, RevPAR/ADR, activos y mantenimiento preventivo, reservar desde la app.
-11. **App (Expo Go):** solo módulos incluidos en Expo SDK 54. No agregar código nativo propio.
-12. **No agregues dependencias** fuera del stack sin justificarlo en el pull request.
-
----
-
-## 6. Convenciones
-
-- **Idioma del dominio: español.** Tablas y columnas en `snake_case` y plural (`reservas`, `tipos_habitacion`, `fecha_entrada`); funciones SQL en verbo (`crear_reserva`); componentes y funciones TS en español (`FormularioReserva`, `crearReserva`). Los términos técnicos de React pueden quedar en inglés (`useQuery`, `props`).
-- **Textos de interfaz:** en español, montos como `Q 1,250.00`.
-- **Ramas:** `feat/HU-REC-05-crear-reserva`, `feat/obj-01-base-datos`, `fix/…`.
-- **Commits:** Conventional Commits en español: `feat(recepcion): crear reserva desde el Gantt (HU-REC-12)`.
-- **Pull requests:** uno por historia o grupo pequeño de historias; incluye los IDs de HU y la checklist de "Definición de Hecho" (documento 03).
-- **Pruebas:** toda regla de negocio nueva lleva prueba (pgTAP para SQL, Vitest para TypeScript). Los flujos críticos llevan Playwright.
-
----
-
-## 7. Comandos (disponibles después de OBJ-04)
-
-```bash
-pnpm install                     # instalar todo
-pnpm --filter web dev            # web en http://localhost:3000
-pnpm --filter mobile start       # app con Expo Go (escanear QR)
-supabase start                   # Supabase local (Docker)
-supabase db reset                # recrear la BD local con migraciones y seed
-supabase test db                 # pruebas pgTAP
-pnpm gen:types                   # regenerar tipos de Supabase en packages/shared
-pnpm lint && pnpm typecheck && pnpm test
-```
-
----
-
-## 8. Protocolo de trabajo del agente
-
-1. **Lee** `AGENTS.md`, los documentos indicados en la tarea y las HU involucradas.
-2. **Presenta un plan** breve (archivos a crear o modificar, migraciones, pruebas) y espera confirmación si la tarea es grande.
-3. **Trabaja en pasos pequeños**, con commits frecuentes en la rama indicada.
-4. **Si algo es ambiguo o contradictorio en la documentación, pregunta.** No inventes reglas.
-5. **Antes de terminar:** ejecuta lint, typecheck y pruebas; corrige lo que falle.
-6. **Resumen final:** qué hiciste, qué HU/criterios quedaron cubiertos, cómo probarlo manualmente, qué quedó pendiente y si agregaste migraciones o dependencias.
-7. **No hagas merge** ni push a `main` o `develop`: eso se hace por pull request.
+### villa-serena-docs
+- Documentación V3. No se genera código aquí.

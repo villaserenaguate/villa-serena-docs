@@ -1,235 +1,194 @@
-# HU — Room Service
+# HU — Room Service (versión 3)
 
 > **Rol:** Room Service (`ROOM_SERVICE`)
 > **Plataforma:** Web privada
 > **Prefijo:** `HU-RS`
-> **Total de historias:** 10
-> **Referencias:** 01 — Alcance (sección F) · 02 — Definición de Roles (3.3)
-
-Estas historias conservan la numeración original (HU-01 a HU-10 → HU-RS-01 a HU-RS-10) y agregan criterios faltantes.
-
-**Flujo de estados del pedido:** `Nuevo → En preparación → En camino → Entregado`, con `Cancelado` posible desde cualquier estado antes de `Entregado`.
+> **Total de historias:** 7 (Nivel 1: 7 · Nivel 2: 0)
+> **Referencias:** Documentación V3 / 01 — Alcance (sección F)
+> **Numeración:** nueva en la versión 3. La correspondencia con la versión 2 está en cada historia ("Reemplaza a") y en el índice.
 
 ---
 
 ## Épica 1: Gestión de pedidos
 
-### HU-RS-01 — Ver pedidos activos
+### HU-RS-01 — Ver la cola de pedidos activos
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Gestión de pedidos | ALC-RS-01 | Alta | M | Pendiente |
+| Web privada | Gestión de pedidos | ALC-RS-01 | 1 | M | Pendiente |
 
 **Historia**
-- **Como** encargado de Room Service
-- **Quiero** ver la lista de pedidos pendientes
+- **Como** personal de Room Service
+- **Quiero** ver la cola de pedidos activos
 - **Para** saber cuáles debo atender primero
 
 **Criterios de aceptación**
-1. Se muestran los pedidos en estado `Nuevo`, `En preparación` y `En camino`.
-2. Cada pedido muestra número de habitación, hora del pedido, tiempo transcurrido y estado.
-3. Los pedidos se ordenan por antigüedad (el más antiguo primero).
-4. Cada estado se distingue visualmente (color o etiqueta).
-5. La lista se actualiza automáticamente cuando llega un pedido nuevo o cambia un estado.
-6. Se muestran todos los pedidos activos, sin importar el turno en que se crearon (el filtro por turno está en HU-RS-09).
+1. Se muestran solo los pedidos en estado `Nuevo`, `En preparación` y `En camino`.
+2. Los pedidos se ordenan por antigüedad (el más antiguo primero).
+3. Cada pedido muestra número de habitación, piso, hora del pedido, tiempo transcurrido y estado; cada estado se distingue por color o etiqueta.
+4. La cola se actualiza sin recargar cuando llega un pedido nuevo o cambia el estado de un pedido.
+5. Los pedidos `Entregado` y `Cancelado` salen de la cola.
+6. No se muestra ningún dato personal del huésped salvo su nombre.
+7. Al reconectarse el tiempo real (la librería se reconecta sola), la pantalla vuelve a cargar la cola completa. No hay indicador "Sin conexión".
 
-**Reglas relacionadas:** RN-RS-001
+**Depende de:** HU-EMP-01, HU-HUE-10
+**Reglas relacionadas:** RN-NOT-006, RN-NOT-007, RN-RS-012, RN-SEG-002 (documento 10)
+**Reemplaza a:** HU-RS-01 (v2)
 
 ---
 
 ### HU-RS-02 — Ver el detalle de un pedido
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Gestión de pedidos | ALC-RS-02 | Alta | S | Pendiente |
+| Web privada | Gestión de pedidos | ALC-RS-02 | 1 | S | Pendiente |
 
 **Historia**
-- **Como** encargado de Room Service
+- **Como** personal de Room Service
 - **Quiero** ver el detalle completo de un pedido
-- **Para** prepararlo correctamente
+- **Para** prepararlo y entregarlo correctamente
 
 **Criterios de aceptación**
-1. Se muestran ítems, cantidades, precio de cada ítem y total.
-2. Se muestran las notas especiales (alergias, preferencias) de forma destacada.
-3. Se muestran nombre del huésped, número de habitación y piso.
-4. Se muestra el origen del pedido (App o Teléfono) y el historial de estados con fecha y hora.
+1. Se muestran los ítems, sus cantidades, el precio de cada ítem (el precio congelado al momento de pedir) y el total.
+2. Las notas del huésped (alergias, preferencias) se muestran de forma destacada.
+3. Se muestran el nombre del huésped, el número de habitación y el piso; no se muestran correo, teléfono ni documento.
+4. Se muestra el historial de estados del pedido con fecha, hora y responsable de cada cambio.
+5. Si el pedido no existe, se muestra un mensaje claro y se vuelve a la cola.
 
 **Depende de:** HU-RS-01
+**Reglas relacionadas:** RN-RS-006, RN-SEG-002 (documento 10)
+**Reemplaza a:** HU-RS-02 (v2)
 
 ---
 
-### HU-RS-03 — Registrar un pedido telefónico
+### HU-RS-03 — Avanzar el estado de un pedido
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Gestión de pedidos | ALC-RS-03 | Media | S | Pendiente |
+| Web privada | Gestión de pedidos | ALC-RS-04 | 1 | S | Pendiente |
 
 **Historia**
-- **Como** encargado de Room Service
-- **Quiero** registrar un pedido que el huésped hizo por teléfono
-- **Para** que quede en el sistema igual que uno hecho desde la app
-
-**Criterios de aceptación**
-1. Solo se pueden seleccionar habitaciones con una reserva `En estadía`.
-2. Se seleccionan ítems del menú y cantidades; los ítems agotados no se pueden seleccionar.
-3. Se pueden agregar notas u observaciones.
-4. El pedido se guarda en estado `Nuevo`, con origen "Teléfono" y el empleado que lo registró.
-5. El huésped puede ver el pedido en su app.
-
-**Reglas relacionadas:** RN-RS-005
-
----
-
-### HU-RS-04 — Actualizar el estado de un pedido
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Gestión de pedidos | ALC-RS-04, ALC-TRA-03 | Alta | S | Pendiente |
-
-**Historia**
-- **Como** encargado de Room Service
+- **Como** personal de Room Service
 - **Quiero** avanzar el estado de un pedido
-- **Para** que los demás roles y el huésped conozcan su progreso
+- **Para** que el huésped y el resto del personal conozcan su progreso
 
 **Criterios de aceptación**
-1. El estado solo avanza en orden: `Nuevo → En preparación → En camino → Entregado`.
-2. No se permite saltar estados ni retroceder.
-3. Cada cambio registra fecha, hora y empleado responsable.
-4. El huésped ve el nuevo estado en la app sin recargar.
-5. Un pedido `Entregado` ya no se puede modificar.
+1. El estado solo avanza en orden: `Nuevo` → `En preparación` → `En camino` → `Entregado`, con un botón para el siguiente paso.
+2. No se permite saltar estados ni retroceder; si se intenta (por ejemplo, desde otra pestaña), el sistema lo rechaza con un mensaje claro.
+3. Si otro empleado ya cambió el estado del pedido, se muestra un aviso y se recarga el pedido con su estado actual.
+4. Cada cambio registra fecha, hora y empleado responsable.
+5. El huésped ve el nuevo estado en la app sin recargar (HU-HUE-11).
+6. Al pasar a `Entregado` se genera el cargo (HU-RS-06) y el huésped recibe una notificación push de pedido entregado (HU-HUE-17).
+7. Un pedido `Entregado` ya no se puede modificar.
 
-**Reglas relacionadas:** RN-RS-001, RN-RS-002
+**Depende de:** HU-RS-02
+**Reglas relacionadas:** RN-NOT-001, RN-NOT-007, RN-RS-001, RN-RS-002, RN-RS-007 (documento 10)
+**Reemplaza a:** HU-RS-04 (v2)
+**Notas técnicas:** mientras un pedido esté `En camino`, el check-out de esa reserva no se permite (HU-REC-14).
 
 ---
 
-### HU-RS-05 — Cancelar un pedido
+### HU-RS-04 — Cancelar un pedido
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Gestión de pedidos | ALC-RS-05 | Media | S | Pendiente |
+| Web privada | Gestión de pedidos | ALC-RS-05 | 1 | S | Pendiente |
 
 **Historia**
-- **Como** encargado de Room Service
+- **Como** personal de Room Service
 - **Quiero** cancelar un pedido indicando el motivo
-- **Para** llevar control de las incidencias (ítem agotado, error de registro, etc.)
+- **Para** informar al huésped cuando un pedido no se puede entregar
 
 **Criterios de aceptación**
-1. Solo se pueden cancelar pedidos que no estén `Entregado`.
-2. El motivo es obligatorio.
-3. El pedido pasa a `Cancelado` y no puede reactivarse; solo se consulta en el historial.
-4. Un pedido cancelado no genera cargo en la cuenta del huésped.
-5. El huésped ve en la app que su pedido fue cancelado y el motivo.
+1. Solo se pueden cancelar pedidos que aún no estén `Entregado` (`Nuevo`, `En preparación` o `En camino`).
+2. El motivo es obligatorio; sin motivo, no se permite cancelar.
+3. El pedido pasa a `Cancelado`, se registran fecha, hora, empleado y motivo, y no puede reactivarse.
+4. Un pedido cancelado no genera ningún cargo en la cuenta del huésped.
+5. El huésped ve en la app que su pedido fue cancelado y el motivo; el huésped no puede cancelar pedidos.
+6. Si se intenta cancelar un pedido `Entregado`, el sistema lo rechaza con un mensaje claro.
 
-**Reglas relacionadas:** RN-RS-003, RN-RS-004
+**Depende de:** HU-RS-02
+**Reglas relacionadas:** RN-RS-003, RN-RS-004, RN-RS-010 (documento 10)
+**Reemplaza a:** HU-RS-05 (v2)
+**Notas técnicas:** los pedidos `Nuevo` o `En preparación` que siguen abiertos al hacer el check-out se cancelan solos, sin cargo (HU-REC-14).
 
 ---
 
 ## Épica 2: Menú
 
-### HU-RS-06 — Consultar el menú
+### HU-RS-05 — Consultar el menú y marcar ítems agotados
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Menú | ALC-RS-06 | Media | S | Pendiente |
+| Web privada | Menú | ALC-RS-06 | 1 | S | Pendiente |
 
 **Historia**
-- **Como** encargado de Room Service
-- **Quiero** consultar el menú con precios y disponibilidad
-- **Para** tomar pedidos sin errores
+- **Como** personal de Room Service
+- **Quiero** consultar el menú y marcar como agotado un ítem que ya no tengo
+- **Para** que los huéspedes no pidan productos que no se pueden preparar
 
 **Criterios de aceptación**
-1. El menú se muestra por categorías con nombre, descripción, precio y disponibilidad (`Disponible` / `Agotado`).
-2. Se puede buscar un ítem por nombre.
-3. Los ítems agotados no se pueden agregar a nuevos pedidos.
+1. El menú se muestra por categorías con nombre, descripción, precio y estado (`Disponible` / `Agotado`).
+2. Room Service puede marcar un ítem `Disponible` como `Agotado`; el cambio registra fecha, hora y empleado.
+3. Un ítem `Agotado` aparece como no disponible en la app la próxima vez que el huésped abre el menú y no se puede pedir.
+4. Si un huésped intenta pedir un ítem que se agotó mientras tenía el menú abierto, el servidor rechaza el pedido con un mensaje claro.
+5. Room Service no puede volver a marcar un ítem como `Disponible`; solo el Administrador lo reactiva (HU-ADM-05).
+6. Los pedidos ya creados con ese ítem no se modifican.
 
-**Reglas relacionadas:** RN-RS-005
-**Depende de:** HU-ADM-07
+**Depende de:** HU-ADM-05
+**Reglas relacionadas:** RN-RS-005, RN-RS-008 (documento 10)
+**Reemplaza a:** HU-RS-06 (v2), HU-RS-07 (v2)
 
 ---
 
-### HU-RS-07 — Marcar un ítem como agotado
+## Épica 3: Cargo a la cuenta
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+### HU-RS-06 — Generar el cargo del pedido entregado
+
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Menú | ALC-RS-07 | Media | S | Pendiente |
+| Web privada | Cargo a la cuenta | ALC-RS-08 | 1 | S | Pendiente |
 
 **Historia**
-- **Como** encargado de Room Service
-- **Quiero** marcar un ítem del menú como agotado
-- **Para** evitar que se sigan haciendo pedidos con ese producto
-
-**Criterios de aceptación**
-1. Room Service puede marcar un ítem como `Agotado`.
-2. Un ítem agotado aparece como no disponible en la app del huésped de inmediato.
-3. Solo el Administrador puede volver a marcarlo como `Disponible` (HU-ADM-07).
-4. Los pedidos ya creados con ese ítem no se modifican.
-
-**Reglas relacionadas:** RN-RS-005
-
----
-
-## Épica 3: Facturación
-
-### HU-RS-08 — Cargar el pedido a la cuenta de la habitación
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Facturación | ALC-RS-08 | Alta | S | Pendiente |
-
-**Historia**
-- **Como** encargado de Room Service
-- **Quiero** que el importe del pedido se agregue automáticamente a la cuenta del huésped
-- **Para** que se cobre al hacer el check-out
+- **Como** personal de Room Service
+- **Quiero** que el importe del pedido se cargue solo a la cuenta del huésped al entregarlo
+- **Para** que se cobre en el check-out sin registrarlo a mano
 
 **Criterios de aceptación**
 1. El cargo se genera automáticamente cuando el pedido pasa a `Entregado`.
-2. El monto es la suma de precio × cantidad de cada ítem, con el precio vigente al momento del pedido.
-3. El cargo queda asociado a la reserva y habitación, con el concepto "Room Service — Pedido #".
-4. El cargo es visible de inmediato para Recepción y para el huésped en la app.
-5. Un pedido genera un solo cargo, aunque el cambio a `Entregado` se reciba dos veces.
+2. El monto es la suma de precio × cantidad de cada ítem, con el precio congelado al momento de pedir.
+3. El cargo se agrega a la cuenta `Abierta` de la reserva `En estadía`, con el concepto "Room Service — Pedido #n".
+4. Un pedido genera **un solo** cargo, aunque el cambio a `Entregado` se reciba dos veces.
+5. El cargo queda registrado al instante; Recepción y el huésped lo ven al abrir o recargar la cuenta (no es un evento en tiempo real).
+6. Room Service no puede editar ni anular el cargo; solo Recepción puede anularlo, con motivo.
 
-**Depende de:** HU-RS-04, HU-REC-19
-
----
-
-## Épica 4: Historial
-
-### HU-RS-09 — Consultar el historial de pedidos
-
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
-|---|---|---|---|---|---|
-| Web privada | Historial | ALC-RS-09 | Baja | S | Pendiente |
-
-**Historia**
-- **Como** encargado de Room Service
-- **Quiero** consultar los pedidos entregados y cancelados
-- **Para** verificar que todo se completó correctamente
-
-**Criterios de aceptación**
-1. Se puede filtrar por fecha, habitación, estado y turno.
-2. Por defecto se muestran los pedidos del turno actual.
-3. Se muestra el tiempo total desde que se creó el pedido hasta que se entregó.
-4. Los pedidos cancelados muestran su motivo.
-
-**Depende de:** HU-ADM-04
+**Depende de:** HU-RS-03
+**Reglas relacionadas:** RN-PAG-010, RN-RS-007 (documento 10)
+**Reemplaza a:** HU-RS-08 (v2)
+**Notas técnicas:** una restricción única (pedido → cargo) en la base de datos evita el cargo doble.
 
 ---
 
-## Épica 5: Notificaciones
+## Épica 4: Avisos
 
-### HU-RS-10 — Recibir aviso de un pedido nuevo
+### HU-RS-07 — Recibir aviso de pedido nuevo
 
-| Plataforma | Épica | Alcance | Prioridad | Tamaño | Estado |
+| Plataforma | Épica | Alcance | Nivel | Tamaño | Estado |
 |---|---|---|---|---|---|
-| Web privada | Notificaciones | ALC-RS-10, ALC-TRA-04 | Alta | S | Pendiente |
+| Web privada | Avisos | ALC-RS-10, ALC-TRA-04 | 1 | S | Pendiente |
 
 **Historia**
-- **Como** encargado de Room Service
+- **Como** personal de Room Service
 - **Quiero** recibir un aviso cuando llega un pedido nuevo
 - **Para** atenderlo sin estar revisando la pantalla constantemente
 
 **Criterios de aceptación**
-1. Cuando llega un pedido nuevo se muestra un aviso en pantalla con sonido.
-2. El aviso incluye número de habitación y hora del pedido.
-3. Al hacer clic en el aviso se abre el detalle del pedido.
-4. El aviso llega sin recargar la página.
+1. Cuando un huésped hace un pedido, aparece un aviso visual en pantalla, sin recargar la página.
+2. El aviso muestra el número de habitación, el piso y la hora del pedido.
+3. Al hacer clic en el aviso se abre el detalle del pedido (HU-RS-02).
+4. El pedido nuevo aparece en la cola en su lugar según su antigüedad.
+
+**Depende de:** HU-RS-01
+**Reglas relacionadas:** RN-NOT-006 (documento 10)
+**Reemplaza a:** HU-RS-10 (v2)
+**Notas técnicas:** el aviso es solo visual. El sonido queda como Nivel 2 (si da tiempo).

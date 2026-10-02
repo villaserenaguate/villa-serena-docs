@@ -1,251 +1,201 @@
-# 08 — Inventario, Turnos y Personal
+# 08 — Inventario, Turnos y Personal (versión 3)
 
 > **Proyecto:** Property Management System (PMS) para Hoteles Boutique — Hotel ficticio "Villa Serena"
-> **Estado:** ✅ Aprobado por el equipo
-> **Fecha de aprobación:** 24 de septiembre de 2026
-> **Documento anterior:** 07 — Estados
-> **Siguiente documento:** 09 — Matriz de Permisos
+> **Estado:** 📝 Para revisión del equipo
+> **Fecha:** 1 de octubre de 2026
+> **Basado en:** Documentación V3 / 01 — Alcance (versión 3), 04 — Historias de Usuario (versión 3) y 07 — Estados (versión 3)
+> **Reemplaza a:** 08 — Inventario, Turnos y Personal, versión 2 (carpeta "Documentación Definitiva")
+> **Documentos relacionados:** 02 — Definición de Roles · 09 — Matriz de Permisos
 
 ---
 
 ## Índice
 
 1. [Propósito](#1-propósito)
-2. [Decisiones aprobadas](#2-decisiones-aprobadas)
-3. [Inventario](#3-inventario)
-4. [Catálogo de artículos para el huésped](#4-catálogo-de-artículos-para-el-huésped)
-5. [Turnos](#5-turnos)
-6. [Personal](#6-personal)
-7. [Cómo se conectan los tres módulos](#7-cómo-se-conectan-los-tres-módulos)
-8. [Reglas de negocio de este documento](#8-reglas-de-negocio-de-este-documento)
-9. [Ajustes aplicados a las historias de usuario](#9-ajustes-aplicados-a-las-historias-de-usuario)
+2. [Decisiones de la versión 3](#2-decisiones-de-la-versión-3)
+3. [Personal (Nivel 1)](#3-personal-nivel-1)
+4. [Perfil del huésped (Nivel 1)](#4-perfil-del-huésped-nivel-1)
+5. [Catálogo de artículos para el huésped (Nivel 1)](#5-catálogo-de-artículos-para-el-huésped-nivel-1)
+6. [Turnos (Nivel 2)](#6-turnos-nivel-2)
+7. [Inventario aislado (Nivel 2)](#7-inventario-aislado-nivel-2)
+8. [Qué cambió respecto a la versión 2](#8-qué-cambió-respecto-a-la-versión-2)
 
 ---
 
 ## 1. Propósito
 
-Define cómo funcionan y cómo se relacionan tres módulos del Administrador que antes estaban desconectados: **inventario**, **turnos** y **personal**. Resuelve el problema 3.5 del Reporte de Revisión.
+Define los datos y el funcionamiento de **personal**, **perfil del huésped**, **catálogo de artículos**, **turnos** e **inventario**.
+
+En la versión 3, estos módulos **no se conectan entre sí ni con la operación**: no hay consumo de insumos, ni repuestos, ni reportes de faltantes, y los turnos no afectan el acceso. Las reglas con ID están en el documento **10 — Reglas de Negocio**; aquí se describe el modelo.
+
+| Módulo | Nivel | Historias |
+|---|---|---|
+| Personal | 1 | HU-ADM-01, HU-ADM-02, HU-EMP-01, HU-EMP-02 |
+| Perfil del huésped | 1 | HU-REC-01, HU-REC-02, HU-HUE-05, HU-HUE-08, HU-CM-01 |
+| Catálogo de artículos | 1 (sin pantalla) | HU-HUE-13 |
+| Turnos | 2 | HU-ADM-12 |
+| Inventario | 2 | HU-ADM-13 |
 
 ---
 
-## 2. Decisiones aprobadas
+## 2. Decisiones de la versión 3
 
-| # | Decisión |
-|---|---|
-| D8-01 | Los **artículos consumibles** (jabón, shampoo, papel higiénico) se descuentan del inventario al entregarse al huésped. |
-| D8-02 | La **lencería** (toallas, almohadas, cobijas) **no se controla** en el inventario en la versión 1, porque se reutiliza. Sí se puede solicitar desde la app. |
-| D8-03 | Los **turnos son informativos**: no bloquean el acceso al sistema. |
-| D8-04 | **No se puede desactivar** a un empleado con trabajo en curso hasta reasignarlo. |
+| # | Decisión | Origen |
+|---|---|---|
+| D8-01 | **Sin integración de inventario:** Room Service, limpieza, solicitudes y mantenimiento no descuentan stock. | D-20 |
+| D8-02 | **Turnos e inventario son Nivel 2:** se construyen solo si da tiempo, en su versión mínima. Falta confirmar con el ingeniero si son obligatorios (Alcance, sección 9). | Alcance, sección 2 |
+| D8-03 | **Los turnos son informativos:** no bloquean el acceso ni sugieren a quién asignar trabajo. | HU-ADM-12 |
+| D8-04 | **No se valida el trabajo en curso al desactivar a un empleado.** No es necesario para funcionar ni para presentar. | Índice de HU, sección 7 |
+| D8-05 | **El catálogo de artículos se carga en los datos iniciales;** no hay pantalla para administrarlo. | HU-HUE-13 |
 
 ---
 
-## 3. Inventario
+## 3. Personal (Nivel 1)
 
-### 3.1 Producto
+### 3.1 Datos del empleado
 
 | Campo | Descripción |
 |---|---|
-| Nombre | Único |
-| Categoría | `INSUMO_LIMPIEZA`, `AMENIDAD_HABITACION` o `REPUESTO` |
-| Unidad de medida | Unidad, litro, rollo, galón, caja, etc. |
-| Stock actual | Se calcula con los movimientos; nunca negativo |
-| Stock mínimo | Umbral para la alerta |
-| Activo | Sí / No |
+| Nombre completo | Se registra al crear la cuenta |
+| Correo | Único entre los empleados; es su usuario |
+| Teléfono | Se registra al crear la cuenta |
+| Rol | `ADMIN`, `RECEPCION`, `ROOM_SERVICE` o `MANTENIMIENTO_LIMPIEZA` (uno solo) |
+| Área | Solo para `MANTENIMIENTO_LIMPIEZA`: `LIMPIEZA`, `MANTENIMIENTO` o `AMBAS` (obligatoria) |
+| Estado | `ACTIVO` o `INACTIVO` |
+| Contraseña | Guardada con hash (BCrypt); nunca en texto plano |
+| Contraseña temporal | Indica si debe cambiarla en el siguiente acceso |
 
-| Categoría | Ejemplos | Quién la consume |
+Se editan nombre, teléfono, rol y área (HU-ADM-02).
+
+### 3.2 Ciclo de la cuenta
+
+| Paso | Qué pasa | Historias |
 |---|---|---|
-| `INSUMO_LIMPIEZA` | Desinfectante, bolsas de basura, detergente | Limpieza (HU-MYL-08) |
-| `AMENIDAD_HABITACION` | Jabón, shampoo, papel higiénico | Limpieza (HU-MYL-08) y entrega de artículos al huésped (HU-MYL-07) |
-| `REPUESTO` | Focos, llaves de ducha, filtros de aire | Mantenimiento (HU-MYL-16) |
+| 1. Crear | El Administrador registra al empleado. El sistema genera una **contraseña temporal** y se la muestra **una sola vez** (con opción de copiar). **No se envía correo**: la entrega es personal. El empleado queda `ACTIVO` | HU-ADM-01 |
+| 2. Primer acceso | Entra con la contraseña temporal y el sistema le **exige cambiarla** antes de usar cualquier otra sección (al menos 8 caracteres, con una letra y un número, distinta de la actual) | HU-EMP-01, HU-EMP-02 |
+| 3. Uso normal | Correo + contraseña. Tras **5 intentos fallidos seguidos**, la cuenta se bloquea **15 minutos**. Puede cambiar su contraseña cuando quiera | HU-EMP-01, HU-EMP-02 |
+| 4. Olvidó su contraseña | No hay "olvidé mi contraseña": el Administrador la **restablece**, se genera otra contraseña temporal y la anterior deja de funcionar | HU-ADM-02 |
+| 5. Desactivar | El Administrador lo pasa a `INACTIVO` (no puede hacerlo consigo mismo). No puede iniciar sesión ni renovar su sesión; si tenía una abierta, le sirve hasta que venza su token de acceso (máximo 15 minutos). Se puede reactivar | HU-ADM-02 |
 
-### 3.2 Movimientos de inventario
+**Siempre queda un Administrador activo:** el Administrador no puede desactivarse ni cambiarse el rol a sí mismo, y quien desactiva es siempre un Administrador activo (HU-ADM-02).
 
-El stock **solo cambia mediante movimientos**. Nunca se edita el número de stock directamente.
+### 3.3 Cuentas que existen desde el arranque
 
-| Código | Efecto | Quién | Origen (registro vinculado) |
-|---|---|---|---|
-| `ENTRADA` | + stock | `ADMIN` | Compra, o atención de un reporte de faltante (HU-ADM-13, 15) |
-| `AJUSTE` | + o − stock | `ADMIN` | Conteo físico; motivo obligatorio (HU-ADM-13) |
-| `CONSUMO_LIMPIEZA` | − stock | MYL | Limpieza de habitación (HU-MYL-08) |
-| `CONSUMO_ENTREGA` | − stock | MYL | Solicitud de artículos atendida (HU-MYL-07) |
-| `CONSUMO_REPUESTO` | − stock | MYL | Orden de mantenimiento (HU-MYL-16) |
+| Cuenta | Cómo se crea |
+|---|---|
+| Primer Administrador | Al arrancar el sistema, con variables de entorno (tarea técnica) |
+| Usuarios de prueba de cada rol, con **dos Administradores** | Datos iniciales (Flyway), para la demostración y para no perder el acceso (V-04) |
 
-**Cada movimiento guarda:** producto, tipo, cantidad, stock resultante, responsable, fecha y hora, motivo o nota, y el registro que lo originó (limpieza, solicitud, orden o reporte de faltante).
+### 3.4 Responsable de cada acción
 
-### 3.3 Alertas y reportes de faltante
-
-Son dos mecanismos **distintos** y complementarios:
-
-| Mecanismo | Cómo se origina | Quién lo ve | Cómo se resuelve |
-|---|---|---|---|
-| **Alerta de stock mínimo** | Automática: el stock queda igual o por debajo del mínimo | Administrador | Desaparece cuando una entrada sube el stock sobre el mínimo |
-| **Reporte de faltante** | Manual: el personal lo reporta (HU-MYL-09) | Administrador y quien lo reportó | El Admin registra la entrada y el reporte pasa a `ATENDIDO` (HU-ADM-15) |
-
-### 3.4 Flujo de reposición
-
-```
-Personal detecta que falta ──► Reporte de faltante (PENDIENTE)
-                                        │
-Stock ≤ mínimo ──► Alerta al Admin      │
-                          │             │
-                          ▼             ▼
-                  Admin registra ENTRADA de inventario
-                          │
-                          ├──► Stock actualizado
-                          └──► Reporte de faltante → ATENDIDO
-```
+Los cambios de estado de reservas, habitaciones, pedidos, solicitudes e incidencias guardan **quién** los hizo (documento 07, RG-EST-02). También guardan su responsable los cargos, los pagos registrados en Recepción y las incidencias reportadas. Los cambios en los datos de los empleados **no** se registran en un historial (X-03).
 
 ---
 
-## 4. Catálogo de artículos para el huésped
-
-Es la lista de lo que el huésped puede pedir desde la app (HU-HUE-16) o por medio de Recepción (HU-REC-21). Lo administra el Administrador.
+## 4. Perfil del huésped (Nivel 1)
 
 | Campo | Descripción |
 |---|---|
-| Nombre | Ej. "Toalla de baño", "Jabón", "Almohada adicional" |
-| Cantidad máxima por solicitud | Ej. 4 |
-| Producto de inventario vinculado | **Opcional.** Solo para consumibles (`AMENIDAD_HABITACION`) |
-| Activo | Sí / No |
+| Nombre completo | Obligatorio |
+| Correo | Obligatorio; **identifica al huésped** |
+| Teléfono | Obligatorio |
+| Nacionalidad | Obligatoria |
+| Tipo de documento | DPI o pasaporte (obligatorio) |
+| Número de documento | Obligatorio |
 
-| Artículo | ¿Vinculado al inventario? | ¿Descuenta stock al entregarse? |
+- Los **mismos 6 datos** se piden en la web, en Recepción y en la API del canal (HU-HUE-05, HU-REC-01, HU-CM-01).
+- Si ya existe un huésped con ese correo, la reserva se asocia a ese perfil **sin cambiar sus datos**.
+- El huésped **no tiene contraseña**: entra a la app con un código de 6 dígitos enviado a su correo (HU-HUE-08).
+- **Huéspedes adicionales:** se guardan en la reserva con nombre completo, tipo y número de documento y nacionalidad. **No son usuarios** y no entran a la app (HU-REC-02).
+
+**Usuarios del sistema (resumen):**
+
+| Tipo | Autenticación | Token |
 |---|---|---|
-| Jabón, shampoo, papel higiénico | Sí (`AMENIDAD_HABITACION`) | ✅ Sí (`CONSUMO_ENTREGA`) |
-| Toallas, almohadas, cobijas | No (lencería) | ❌ No |
-
-**Al marcar una solicitud de artículos como `ATENDIDA`:** por cada artículo vinculado a un producto se registra un movimiento `CONSUMO_ENTREGA` con la cantidad entregada. Si no hay stock suficiente, no se puede marcar como atendida hasta que el Admin registre una entrada o un ajuste.
+| Empleado | Correo + contraseña (BCrypt) | JWT con su rol y, si aplica, su área. Acceso de 15 minutos y refresh de 7 días que se renueva en cada uso (documento 14); en la web, a través del BFF |
+| Huésped | Correo + código OTP | JWT con rol `HUESPED`. Acceso de 15 minutos y refresh de 7 días que se renueva en cada uso |
 
 ---
 
-## 5. Turnos
+## 5. Catálogo de artículos para el huésped (Nivel 1)
 
-### 5.1 Turno
+Es la lista de lo que el huésped puede pedir desde la app (toallas, almohadas, cobijas, papel higiénico, jabón, etc.).
+
+| Campo | Descripción |
+|---|---|
+| Nombre | Ej. "Toalla de baño" |
+| Cantidad máxima por solicitud | Ej. 4; no se acepta una cantidad mayor |
+
+- Se carga en los **datos iniciales**; no hay pantalla para administrarlo (HU-HUE-13).
+- **No está vinculado al inventario:** entregar artículos no descuenta stock (HU-HUE-13, HU-MYL-05).
+
+---
+
+## 6. Turnos (Nivel 2)
+
+Solo se construye si da tiempo (HU-ADM-12).
+
+### 6.1 Turno
 
 | Campo | Descripción |
 |---|---|
 | Nombre | Ej. Mañana, Tarde, Noche |
-| Hora de inicio / hora de fin | Puede cruzar la medianoche (ej. 22:00 – 06:00) |
-| Activo | Sí / No |
+| Hora de inicio y hora de fin | Puede cruzar la medianoche (ej. 22:00 a 06:00) |
+| Estado | `ACTIVO` o `INACTIVO`; se puede editar y desactivar |
 
-### 5.2 Asignación de turno
+### 6.2 Asignación
 
 | Campo | Descripción |
 |---|---|
-| Empleado | Cualquier rol excepto `ADMIN` |
-| Fecha | Día en que **inicia** el turno |
-| Turno | Turno activo |
+| Empleado | `ACTIVO` y que no sea Administrador |
+| Fecha | Una o varias fechas |
+| Turno | Un turno |
 
-### 5.3 Para qué se usan los turnos
-
-| Uso | Dónde |
-|---|---|
-| Filtro "mi turno" en el historial de pedidos (ventana de tiempo del turno actual del empleado) | HU-RS-09 |
-| Panel "personal en turno ahora" | HU-ADM-04 |
-| Sugerir técnicos en turno al asignar una orden y advertir (sin bloquear) si el elegido no está en turno | HU-ADM-16 |
-| Cada empleado consulta sus turnos de la semana | HU-ADM-04 |
-
-**Los turnos no bloquean el acceso.** Un empleado puede entrar y trabajar fuera de su turno (por ejemplo, para cubrir a un compañero).
+- Un empleado no puede tener dos turnos que se traslapen.
+- Se puede quitar una asignación.
+- Hay una **vista semanal** con los empleados y sus turnos por día.
+- Los turnos son **solo informativos**: no limitan el acceso ni aplican otras reglas.
 
 ---
 
-## 6. Personal
+## 7. Inventario aislado (Nivel 2)
 
-### 6.1 Modelo de usuarios
+Solo se construye si da tiempo (HU-ADM-13). **No se conecta con ningún otro módulo.**
 
-| Tipo | Autenticación | Perfil |
+### 7.1 Producto
+
+| Campo | Descripción |
+|---|---|
+| Nombre | Único |
+| Categoría | Ej. Insumos de limpieza, Amenidades, Repuestos |
+| Unidad de medida | Ej. unidad, litro, rollo |
+| Stock mínimo | Umbral para la marca "Stock bajo" |
+| Stock actual | Empieza en 0; solo cambia con movimientos; nunca queda negativo |
+| Estado | `ACTIVO` o `INACTIVO` |
+
+### 7.2 Movimientos
+
+| Tipo | Efecto | Quién | Datos |
+|---|---|---|---|
+| Entrada | + stock | Administrador | Cantidad mayor que cero y motivo obligatorio |
+| Salida | − stock | Administrador | Cantidad mayor que cero y motivo obligatorio. Si supera el stock actual, se rechaza |
+
+Cada movimiento guarda fecha, hora, tipo, cantidad, motivo y responsable, y se puede ver el historial de cada producto.
+
+### 7.3 Lista de productos
+
+Muestra stock actual, stock mínimo y categoría. Los productos con stock **igual o menor** al mínimo llevan la marca **"Stock bajo"**. Se puede filtrar por categoría y por "solo stock bajo". No hay alertas ni reportes de faltantes.
+
+---
+
+## 8. Qué cambió respecto a la versión 2
+
+| Tema | Versión 2 | Versión 3 |
 |---|---|---|
-| Empleado | Usuario de Supabase Auth (correo + contraseña) | Perfil de empleado: nombre, teléfono, rol, área (solo MYL), estado |
-| Huésped | Usuario de Supabase Auth (OTP por correo) | Perfil de huésped: nombre, documento, nacionalidad, teléfono, correo. Se vincula al usuario en su primer acceso |
-
-Un mismo correo **no** puede ser empleado y huésped a la vez.
-
-### 6.2 Responsable de cada acción
-
-Todo registro creado o modificado por el personal guarda **quién lo hizo**: cambios de estado, cargos, pagos, movimientos de inventario, observaciones, reportes, asignaciones.
-
-### 6.3 Desactivación de un empleado
-
-| Paso | Detalle |
-|---|---|
-| 1. Verificación | El sistema revisa si el empleado tiene **órdenes `ASIGNADA` o `EN_PROCESO`**, **solicitudes `EN_PROCESO`** o **habitaciones `EN_LIMPIEZA`** a su cargo |
-| 2. Bloqueo | Si tiene trabajo en curso, **no se permite** desactivarlo; se muestra la lista para que el Admin lo reasigne |
-| 3. Desactivación | El estado pasa a `INACTIVO`; se cierra su sesión y no puede volver a entrar |
-| 4. Limpieza | Se eliminan sus **asignaciones de turno futuras** |
-| 5. Historial | Su nombre se conserva en todos los registros históricos |
-
-**Reasignar trabajo en curso (HU-ADM-20):** el Admin pasa las solicitudes `EN_PROCESO` y las limpiezas `EN_LIMPIEZA` a otro empleado con área `LIMPIEZA` o `AMBAS`, y las órdenes a otro técnico. Se registra como un cambio de responsable con motivo, sin cambiar el estado.
-
----
-
-## 7. Cómo se conectan los tres módulos
-
-```
-                        ┌──────────────┐
-          crea/desactiva│ ADMINISTRADOR│ asigna turnos
-        ┌───────────────┤              ├───────────────┐
-        ▼               └──────┬───────┘               ▼
-  ┌──────────┐                 │ ENTRADA / AJUSTE  ┌────────┐
-  │ EMPLEADO │─────────────────┼──────────────────►│ TURNOS │
-  └────┬─────┘                 ▼                   └────────┘
-       │                ┌────────────┐
-       ├─ Limpieza ────►│ INVENTARIO │◄── CONSUMO_LIMPIEZA / CONSUMO_ENTREGA
-       ├─ Mantenimiento►│            │◄── CONSUMO_REPUESTO
-       │                └─────┬──────┘
-       │                      │ stock ≤ mínimo
-       └─ Reporte de faltante─┴──────────► Alerta / tarea para el ADMINISTRADOR
-```
-
----
-
-## 8. Reglas de negocio de este documento
-
-Estas reglas se consolidarán en el documento 10 — Reglas de Negocio.
-
-### Inventario
-
-| ID | Regla |
-|---|---|
-| RN-INV-001 | El stock solo cambia mediante movimientos de inventario. |
-| RN-INV-002 | El stock nunca puede quedar negativo; un consumo o ajuste que lo deje negativo se rechaza. |
-| RN-INV-003 | Todo movimiento registra producto, tipo, cantidad, stock resultante, responsable, fecha y origen. |
-| RN-INV-004 | Un `AJUSTE` requiere motivo obligatorio y solo lo hace el Administrador. |
-| RN-INV-005 | Cuando el stock queda igual o por debajo del mínimo, se genera una alerta para el Administrador. |
-| RN-INV-006 | Los consumos de limpieza solo usan productos `INSUMO_LIMPIEZA` o `AMENIDAD_HABITACION`; los de mantenimiento, solo `REPUESTO`. |
-| RN-INV-007 | Al atender una solicitud de artículos, cada artículo vinculado a un producto descuenta stock (`CONSUMO_ENTREGA`). |
-| RN-INV-008 | La lencería no se controla en el inventario en la versión 1. |
-| RN-INV-009 | No puede existir más de un reporte de faltante `PENDIENTE` por producto. |
-
-### Turnos
-
-| ID | Regla |
-|---|---|
-| RN-TUR-001 | Un empleado no puede tener asignados dos turnos que se traslapen. |
-| RN-TUR-002 | No se asignan turnos al rol `ADMIN` ni a empleados `INACTIVO`. |
-| RN-TUR-003 | Los turnos son informativos: no restringen el acceso al sistema. |
-| RN-TUR-004 | No se puede desactivar un turno con asignaciones futuras. |
-
-### Personal
-
-| ID | Regla |
-|---|---|
-| RN-PER-001 | Solo el Administrador crea, edita y desactiva empleados. |
-| RN-PER-002 | Los empleados no se eliminan; se desactivan. |
-| RN-PER-003 | No se puede desactivar a un empleado con órdenes `ASIGNADA` o `EN_PROCESO`, solicitudes `EN_PROCESO` o habitaciones `EN_LIMPIEZA` a su cargo. |
-| RN-PER-004 | Al desactivar a un empleado se eliminan sus asignaciones de turno futuras y se cierra su sesión. |
-| RN-PER-005 | El Administrador no puede desactivarse a sí mismo. |
-| RN-PER-006 | Un mismo correo no puede pertenecer a un empleado y a un huésped. |
-| RN-PER-007 | El rol `MANTENIMIENTO_LIMPIEZA` requiere un área (`LIMPIEZA`, `MANTENIMIENTO` o `AMBAS`). |
-
----
-
-## 9. Ajustes aplicados a las historias de usuario
-
-| Historia | Ajuste |
-|---|---|
-| HU-ADM-02 | Desactivación bloqueada con trabajo en curso; se eliminan turnos futuros |
-| HU-ADM-04 | Se agrega el panel "personal en turno ahora" |
-| HU-ADM-12 | Categorías con código; catálogo de artículos para el huésped |
-| HU-ADM-16 | Sugiere técnicos en turno y advierte si el elegido no lo está |
-| HU-HUE-16 | El catálogo de artículos lo administra el Admin |
-| HU-MYL-07 | Al atender artículos consumibles se descuenta stock |
-| HU-ADM-20 | Nueva (revisión de consistencia): reasignar trabajo en curso |
+| Inventario | Integrado: consumos de limpieza, de entrega de artículos y de repuestos; ajustes; alertas; reportes de faltantes | **Aislado y Nivel 2**: solo entradas y salidas manuales del Administrador; marca "Stock bajo" |
+| Catálogo de artículos | Lo administraba el Administrador; artículos vinculados al inventario | Se carga en los datos iniciales; sin pantalla y sin inventario |
+| Turnos | Panel "personal en turno", filtro "mi turno", sugerencia de técnicos, no desactivar turnos con asignaciones futuras | **Nivel 2**: definir, asignar y vista semanal; solo informativos |
+| Desactivar empleados | Bloqueado con trabajo en curso; reasignación (HU-ADM-20 de la v2); se cerraba su sesión y se borraban sus turnos futuros | Sin validación de trabajo en curso ni reasignación; la sesión abierta vence sola (máx. 15 min) |
+| Correo de empleado y huésped | Un mismo correo no podía ser empleado y huésped | Regla eliminada |
+| Historial de personal | Se registraban desactivaciones y restablecimientos | Eliminado (X-03) |
+| Perfil del huésped | Datos distintos según el origen; perfil creado en el primer acceso | **Los mismos 6 datos** en todos los orígenes; se identifica por su correo |
