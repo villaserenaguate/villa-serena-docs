@@ -9,6 +9,8 @@
 | Cubre | Proyecto base de Spring; tarea técnica: historial de cambios de estado (ALC-TRA-03) |
 | Depende de | Nada. Puede hacerse el jueves 1 por la noche (opcional). **Josué (OBJ-0C) y Pablo (OBJ-0D) parten de este proyecto** |
 
+> **Antes de empezar:** prepara tu computadora con la `16 - Guia de Arranque del Proyecto.md` (instalar, `.env` y encender Docker). Para crear tu rama y subir tu trabajo con un pull request, sigue la sección 3 de `00 - Como usar los prompts.md`.
+
 ## Documentos que debes adjuntar a la IA
 
 - `AGENTS.md`
@@ -73,3 +75,7 @@ Primero muéstrame el plan de archivos; después créalos.
 4. http://localhost:8080/swagger-ui.html abre.
 5. Una petición a una ruta inexistente responde con el formato de error en español.
 6. `git status` no muestra ningún `.env`.
+
+## Al terminar
+
+Cuando tu pull request se fusione, abre `17 - Avance del Proyecto.md` (repositorio `villa-serena-docs`), cambia tu casilla de `[ ]` a `[x]` y agrega el número del PR. Si no sabes cómo, avisa en el grupo y Josué la marca.

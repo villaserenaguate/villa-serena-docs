@@ -93,7 +93,8 @@ Carpeta raíz: `D:\Bibliotecas Joss\Universidad 2do\Proyecto Final Desarrollo We
 | `12 - Casos de Uso.md` | ✅ 19 casos de uso |
 | `14 - Tecnologias y Arquitectura.md` | ✅ Decisiones AD-01 a AD-19, BFF, seguridad y entorno local |
 | `13 - Plan de Trabajo.md` | ✅ T-01 a T-10 y R-01 a R-04 aplicados; calendario con máximo 3 h por día seguro y margen de error aceptado |
-| `15 - Prompts de IA` | Pendiente |
+| `15 - Prompts de IA\` | ✅ Objetivo 0 listo: `AGENTS.md`, `CLAUDE.md`, guía `00 - Como usar los prompts.md` y OBJ-0A a OBJ-0F. Pendiente: contrato del API y objetivos 1 a 4 |
+| `16 - Guia de Arranque del Proyecto.md` | ✅ Instalar, `.env`, encender y apagar el entorno, retomar el trabajo y errores comunes |
 
 ### 4.2 En el proyecto de Claude ("Proyecto Final Desarrollo Web")
 
