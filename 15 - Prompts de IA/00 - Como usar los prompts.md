@@ -11,7 +11,7 @@
 
 Prepara tu computadora con la **`16 - Guia de Arranque del Proyecto.md`** (en la raíz de la documentación): qué instalar, cómo clonar los repositorios, cómo crear tu `.env` y cómo encender el proyecto cada día.
 
-## 2. Qué prompt usa cada persona (objetivo 0)
+## 2. Qué prompt usa cada persona
 
 | Prompt | Repositorio | Responsable | Horas | Cuándo |
 |---|---|---|---|---|
@@ -22,6 +22,37 @@ Prepara tu computadora con la **`16 - Guia de Arranque del Proyecto.md`** (en la
 | OBJ-0D — API: seguridad y JWT | `villa-serena-api` | Pablo | 4 | Vie 2 y Lun 5 |
 | OBJ-0E — Web: proyecto base y BFF | `villa-serena-web` | Alex (y Kim, diseño base) | 3,5 + 1 | Jue 1 (opcional), Vie 2 |
 | OBJ-0F — Móvil: proyecto base | `villa-serena-movil` | Carlos | 1 + 1 (push, Vie 2) | Jue 1 (opcional) y Vie 2 |
+| OBJ-0G — API: contrato OpenAPI (parte 1 y parte 2) | `villa-serena-api` | Josué (Pablo y Hugo revisan) | 3 | Vie 2 (parte 1) y Lun 5 (parte 2) |
+
+**Prompts de los demás objetivos ya disponibles:**
+
+| Prompt | Repositorio | Responsable | Horas | Cuándo |
+|---|---|---|---|---|
+| OBJ-1C — API: correo de confirmación y canal | `villa-serena-api` | Hugo | 2,5 | Vie 2 |
+| OBJ-1E — Web: resultado del pago y canal simulado | `villa-serena-web` | Alex | 2,5 | Vie 2 y Lun 5 |
+| OBJ-4C — Web: cuenta, check-out e impresión | `villa-serena-web` | Kim | 3 | Vie 2 (datos de prueba) y Jue 8 (conectar) |
+| OBJ-1A — API: hotel, catálogo, diseño del canal y guía de Stripe CLI | `villa-serena-api` y `villa-serena-docs` | Josué | 2,5 | Mar 6 y Jue 8 |
+| OBJ-1B — API: disponibilidad, reserva, cargos y Stripe | `villa-serena-api` | Pablo | 5,5 | Lun 5 a Mié 7 |
+| OBJ-1D — Web: web pública, búsqueda y formulario de reserva | `villa-serena-web` | Kim | 5,5 | Lun 5 y Mar 6 |
+| OBJ-2C — API: habitaciones | `villa-serena-api` | Hugo | 1,5 | Lun 5 |
+| OBJ-2E — Web: búsqueda, cancelación y habitaciones | `villa-serena-web` | Alex | 4 | Lun 5 y Mar 6 |
+| OBJ-3A-1 — API: Room Service y WebSocket | `villa-serena-api` | Hugo | 6 | Lun 5 a Mié 7 |
+| OBJ-3A-2 — API: acceso del huésped, mis reservas y push | `villa-serena-api` | Carlos | 2,5 | Lun 5 y Mar 6 |
+| OBJ-3A-4 — App: acceso, estadía, pedidos y push | `villa-serena-movil` | Carlos | 6,5 | Lun 5 a Jue 8 |
+| OBJ-2A — API: huéspedes, búsqueda, datos del Gantt y reservas de prueba | `villa-serena-api` | Josué | 4,5 | Mar 6 a Jue 8 |
+| OBJ-2B — API: reservas de Recepción, cancelación y check-in | `villa-serena-api` | Pablo | 3,5 | Mié 7 y Jue 8 |
+| OBJ-2D — Web: Gantt, reserva de Recepción y check-in | `villa-serena-web` | Kim | 6,5 | Mar 6 y Mié 7 |
+| OBJ-3A-3 — Web: Room Service en vivo y cliente de tiempo real | `villa-serena-web` | Alex | 5 | Mié 7 y Jue 8 |
+| OBJ-3B-1 — API: limpieza e incidencias | `villa-serena-api` | Hugo | 3,5 | Mié 7 y Jue 8 |
+| OBJ-3B-2 — API y App: solicitudes del huésped | `villa-serena-api` y `villa-serena-movil` | Carlos | 4,5 | Mié 7 y Jue 8 |
+| OBJ-3B-3 — Web: limpieza y solicitudes | `villa-serena-web` | Kim | 3,5 | Jue 8 |
+| OBJ-3B-4 — Web: incidencias | `villa-serena-web` | Alex | 2,5 | Jue 8 |
+| OBJ-4A — API: cuenta, check-out y pago desde la app | `villa-serena-api` | Pablo | 3,5 | Jue 8 |
+| OBJ-4B — API: factura | `villa-serena-api` | Hugo | 2 | Mié 7 |
+| OBJ-INT — Integración y prueba del flujo completo | Todos | Todos | 3 c/u | Vie 9 y Sáb 10 |
+| OBJ-4D — App: cuenta y pago del saldo | `villa-serena-movil` | Carlos | 3 | Vie 2 (datos de prueba) y Jue 8 (conectar) |
+
+Con esto están todos los prompts del plan (objetivos 0 a 4 e integración).
 
 **Orden en el API:** OBJ-0B (proyecto base de Hugo) va primero. Josué y Pablo empiezan cuando Hugo lo haya fusionado en `main` (sección 3, paso 1). Si todavía no está, parten de la rama de Hugo: `git switch obj0-proyecto-base` y desde ahí crean la suya.
 

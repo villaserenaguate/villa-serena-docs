@@ -121,6 +121,57 @@ El API debe estar encendido para que funcionen la web y la app. La app necesita 
 
 ---
 
+### 4.1 Probar la app en el teléfono
+
+La app del teléfono habla **directo con el API** de la computadora (no pasa por la web). Por eso necesitan estar en la **misma red** y la app debe usar la **IP local** de la computadora, nunca `localhost` (en el teléfono, `localhost` es el propio teléfono).
+
+**1. Misma red Wi-Fi.** Conecta la computadora y el teléfono a la misma red. Si estás en una red de la universidad o pública y no se ven entre sí (muchas bloquean la conexión entre dispositivos), activa el **punto de acceso** del teléfono y conecta la computadora a él.
+
+**2. Averiguar la IP de la computadora.** En `cmd`:
+
+```bat
+ipconfig
+```
+
+Busca el adaptador **Wi-Fi** (o el del punto de acceso) y copia la **Dirección IPv4**, por ejemplo `192.168.1.50`.
+
+**3. Ponerla en el `.env` de `villa-serena-movil`:**
+
+```env
+EXPO_PUBLIC_API_URL=http://192.168.1.50:8080
+```
+
+(Si el `.env.example` tiene otra variable para el WebSocket, usa la misma IP: `ws://192.168.1.50:8080/...`).
+
+**4. Permitir el puerto 8080 en el firewall de Windows** (una sola vez). Cuando Windows pregunte si Java puede comunicarse, marca **Redes privadas** y acepta. Si no preguntó, en `cmd` **como administrador**:
+
+```bat
+netsh advfirewall firewall add rule name="Villa Serena API" dir=in action=allow protocol=TCP localport=8080
+```
+
+Revisa también que tu red Wi-Fi esté como **Privada** (Configuración → Red e Internet → tu red → Tipo de perfil de red).
+
+**5. Comprobar desde el teléfono:** abre en el navegador del teléfono `http://192.168.1.50:8080/actuator/health`. Debe decir `UP`. Si no carga, el problema es la red o el firewall, no la app.
+
+**6. Abrir la app:**
+
+| Para probar… | Qué usar | Comando en `villa-serena-movil` |
+|---|---|---|
+| Todo menos las notificaciones push | **Expo Go de SDK 54** (desde expo.dev/go) | `npx expo start` y escanear el código QR |
+| Las notificaciones push | El **development build** (el APK que generó Carlos con EAS) instalado en el teléfono | `npx expo start --dev-client` y escanear el código QR |
+
+Si el código QR no conecta, prueba `npx expo start --tunnel` (más lento; el API sigue usando la IP local).
+
+**Si cambia la IP** (otra red, o el router la reasignó): actualiza `EXPO_PUBLIC_API_URL` y reinicia con caché limpia, porque esas variables quedan grabadas dentro de la app:
+
+```bat
+npx expo start -c
+```
+
+**Notificaciones push:** necesitan Internet en el teléfono y el development build; en Expo Go no funcionan. Solo llegan con la reserva `EN_ESTADIA`.
+
+---
+
 ## 5. Retomar el trabajo (continuar donde lo dejaste)
 
 **Antes de empezar una tarea nueva**, trae lo último que subió el equipo:
@@ -170,6 +221,7 @@ Cómo subir tu trabajo y abrir el pull request: `15 - Prompts de IA/00 - Como us
 | `short read ... unexpected EOF` o `no such host` al descargar imágenes | Se cortó Internet o falla el DNS mientras Docker descargaba | Revisa tu Wi-Fi; si usas VPN o proxy, apágalo (o configúralo en Docker Desktop → Settings → Resources → Proxies). Luego repite `docker compose ... up -d`; Docker continúa donde se quedó |
 | `port is already allocated` | Otro programa usa ese puerto | Cierra ese programa o cambia el puerto en tu `.env` |
 | `'.' no se reconoce como un comando` al usar `./mvnw` | En `cmd` se escribe distinto | Usa `mvnw.cmd spring-boot:run` |
-| La app en el teléfono no llega al API | Teléfono y computadora en redes distintas, o se usó `localhost` | Misma red Wi-Fi y la IP local de la computadora en `EXPO_PUBLIC_API_URL` |
+| La app en el teléfono no llega al API | Redes distintas, se usó `localhost`, firewall o la IP cambió | Sigue la sección 4.1, pasos 1 a 5; si la IP cambió, `npx expo start -c` |
+| Las notificaciones push no llegan | Se está usando Expo Go, no hay Internet en el teléfono o la reserva no está `EN_ESTADIA` | Usa el development build (sección 4.1, paso 6) |
 | El pull request dice que tiene conflictos | Otra persona cambió lo mismo | No lo resuelvas a ciegas: avisa a Josué |
 | La IA quiere actualizar versiones o agregar funciones | Se sale del alcance | Recházalo (frases de la guía de prompts, sección 5) |

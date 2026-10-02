@@ -320,7 +320,7 @@ Estructura interna del API:
 ```text
 villa-serena-api/
 ├── openapi.yaml
-├── src/main/java/gt/villaserena/
+├── src/main/java/com/villaserena/api/
 │   ├── config/          Seguridad, CORS, WebSocket, OpenAPI
 │   ├── auth/            Login, contraseña temporal, OTP, JWT y renovación
 │   ├── reservas/        Disponibilidad, tarifas, reservas, cuentas y pagos

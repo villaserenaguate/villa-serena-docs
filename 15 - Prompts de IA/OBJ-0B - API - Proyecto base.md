@@ -27,7 +27,7 @@ Objetivo: crear el proyecto base del backend, sin lógica de negocio todavía.
 
 Crea:
 1. Proyecto Maven con Spring Boot 4.1 y Java 21 (con ./mvnw). Paquete raíz
-   gt.villaserena y los paquetes vacíos de la sección 7 del documento 14
+   com.villaserena.api y los paquetes vacíos de la sección 7 del documento 14
    (config, auth, reservas, estadia, roomservice, piso, personal, catalogos,
    facturacion, canal, notificaciones, comun; sin inventario, que es Nivel 2).
 2. Dependencias: spring-boot-starter-webmvc, -data-jpa, -validation, -flyway
