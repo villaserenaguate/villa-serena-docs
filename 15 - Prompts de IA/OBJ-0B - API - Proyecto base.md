@@ -9,6 +9,8 @@
 | Cubre | Proyecto base de Spring; tarea técnica: historial de cambios de estado (ALC-TRA-03) |
 | Depende de | Nada. Puede hacerse el jueves 1 por la noche (opcional). **Josué (OBJ-0C) y Pablo (OBJ-0D) parten de este proyecto** |
 
+> **Antes de empezar:** sigue la guía `00 - Como usar los prompts.md`: qué instalar (sección 1), cómo crear tu rama (sección 3) y cómo preparar tu `.env` (sección 4). Al terminar, sube tu trabajo con un pull request (sección 3).
+
 ## Documentos que debes adjuntar a la IA
 
 - `AGENTS.md`

@@ -9,6 +9,8 @@
 | Depende de | Repositorio creado. Para probar el login de punta a punta: OBJ-0D (Pablo) |
 | Calendario | Alex: Jue 1 (opcional, proyecto Next.js) y Vie 2 (BFF). Kim: Vie 2 |
 
+> **Antes de empezar:** sigue la guía `00 - Como usar los prompts.md`: qué instalar (sección 1), cómo crear tu rama (sección 3) y cómo preparar tu `.env` (sección 4). Al terminar, sube tu trabajo con un pull request (sección 3).
+
 ## Documentos que debes adjuntar a la IA
 
 - `AGENTS.md`

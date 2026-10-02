@@ -9,6 +9,8 @@
 | Cubre | Tareas técnicas: entorno local con Docker (ALC-TRA-10) y Grafana en local (ALC-TRA-09, AD-15) |
 | Depende de | Nada. Puede hacerse el jueves 1 por la noche (opcional) |
 
+> **Antes de empezar:** sigue la guía `00 - Como usar los prompts.md`: qué instalar (sección 1), cómo crear tu rama (sección 3) y cómo preparar tu `.env` (sección 4). Al terminar, sube tu trabajo con un pull request (sección 3).
+
 ## Documentos que debes adjuntar a la IA
 
 - `AGENTS.md`
