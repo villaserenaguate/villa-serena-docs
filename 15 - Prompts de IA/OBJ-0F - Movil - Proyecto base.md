@@ -9,7 +9,7 @@
 | Depende de | Nada para la parte 1. Para la parte 2: cuenta de Expo y proyecto de Firebase |
 | Calendario | Parte 1: Jue 1 (opcional) o Vie 2. Parte 2: Vie 2 |
 
-> **Antes de empezar:** sigue la guía `00 - Como usar los prompts.md`: qué instalar (sección 1), cómo crear tu rama (sección 3) y cómo preparar tu `.env` (sección 4). Al terminar, sube tu trabajo con un pull request (sección 3).
+> **Antes de empezar:** prepara tu computadora con la `16 - Guia de Arranque del Proyecto.md` (instalar, `.env` y encender Docker). Para crear tu rama y subir tu trabajo con un pull request, sigue la sección 3 de `00 - Como usar los prompts.md`.
 
 ## Documentos que debes adjuntar a la IA
 
@@ -88,3 +88,7 @@ otras tareas.
 3. **Parte 2:** el development build se instala en el teléfono y muestra el Expo push token.
 4. **Parte 2:** una notificación de prueba enviada desde https://expo.dev/notifications con ese token llega al teléfono.
 5. Ni la llave de FCM ni otros secretos están en el repositorio.
+
+## Al terminar
+
+Cuando tu pull request se fusione, abre `17 - Avance del Proyecto.md` (repositorio `villa-serena-docs`), cambia tu casilla de `[ ]` a `[x]` y agrega el número del PR. Si no sabes cómo, avisa en el grupo y Josué la marca.

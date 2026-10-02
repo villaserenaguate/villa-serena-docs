@@ -10,7 +10,7 @@
 | Depende de | OBJ-0A (PostgreSQL) y OBJ-0B (proyecto base). Si OBJ-0B no está en `main`, parte de la rama de Hugo |
 | Calendario | Vie 2: esquema (2,5 h). Lun 5: terminar esquema y datos iniciales (2,5 h) |
 
-> **Antes de empezar:** sigue la guía `00 - Como usar los prompts.md`: qué instalar (sección 1), cómo crear tu rama (sección 3) y cómo preparar tu `.env` (sección 4). Al terminar, sube tu trabajo con un pull request (sección 3).
+> **Antes de empezar:** prepara tu computadora con la `16 - Guia de Arranque del Proyecto.md` (instalar, `.env` y encender Docker). Para crear tu rama y subir tu trabajo con un pull request, sigue la sección 3 de `00 - Como usar los prompts.md`.
 
 ## Documentos que debes adjuntar a la IA
 
@@ -99,3 +99,7 @@ No hagas:
 3. Insertar a mano dos reservas `CONFIRMADA` en la misma habitación con fechas que se cruzan falla por la restricción `EXCLUDE`.
 4. Insertar un segundo empleado con el mismo correo falla por el índice único.
 5. Ningún archivo del repositorio contiene contraseñas, hashes ni claves reales.
+
+## Al terminar
+
+Cuando tu pull request se fusione, abre `17 - Avance del Proyecto.md` (repositorio `villa-serena-docs`), cambia tu casilla de `[ ]` a `[x]` y agrega el número del PR. Si no sabes cómo, avisa en el grupo y Josué la marca.

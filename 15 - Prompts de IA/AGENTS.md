@@ -14,7 +14,7 @@ PMS (sistema de administración hotelera) para el hotel boutique **ficticio** "V
 
 ## 2. Reglas de trabajo para la IA
 
-1. **Idioma:** responde, explica y comenta en **español**. El código, los nombres de clases, variables y endpoints técnicos van en inglés o en español según la convención del documento 14 (rutas `/api/v1/...`, paquete `gt.villaserena`).
+1. **Idioma:** responde, explica y comenta en **español**. El código, los nombres de clases, variables y endpoints técnicos van en inglés o en español según la convención del documento 14 (rutas `/api/v1/...`, paquete `com.villaserena.api`).
 2. **No inventes alcance.** Implementa **solo** lo que pide el prompt del objetivo y los documentos adjuntos. No agregues pantallas, estados, validaciones, campos ni dependencias "por si acaso". Si algo parece faltar, **pregunta** antes de agregarlo.
 3. **Primero el plan, después el código.** Antes de escribir, muestra un plan corto (archivos a crear o cambiar). Trabaja en pasos pequeños y verificables.
 4. **Los documentos mandan.** Si el prompt y un documento se contradicen, gana el documento y avisa de la contradicción.
@@ -63,7 +63,7 @@ PMS (sistema de administración hotelera) para el hotel boutique **ficticio** "V
 - No agregues el API, la web ni la app a Docker en el hito: corren en la computadora de cada integrante.
 
 ### villa-serena-api
-- Spring Boot 4.1, paquete raíz `gt.villaserena`, módulos según el documento 14 (sección 7).
+- Spring Boot 4.1, paquete raíz `com.villaserena.api`, módulos según el documento 14 (sección 7).
 - Endpoints bajo `/api/v1/...`. Cada rol recibe un **DTO** con solo lo que puede ver; nunca se devuelve la entidad.
 - Las reglas viven en Spring y en la base de datos, no solo en la interfaz (documento 14, sección 5).
 - Comando: `./mvnw spring-boot:run` (Flyway crea las tablas y carga los datos iniciales).

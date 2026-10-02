@@ -3,26 +3,15 @@
 > **Para qué sirve:** guía paso a paso para que cada integrante use su prompt con la IA, aunque no tenga experiencia con estas tecnologías.
 > **Basado en:** 13 — Plan de Trabajo y 14 — Tecnologías y Arquitectura.
 > **Comandos:** escritos para la terminal de Windows (`cmd`). En PowerShell funcionan igual, salvo donde se indica.
+> **Antes de esta guía:** `16 - Guia de Arranque del Proyecto.md` (preparar la computadora y encender el proyecto).
 
 ---
 
-## 1. Qué instalar antes de empezar
+## 1. Antes de empezar
 
-| Programa | Quién lo necesita | Cómo comprobar que funciona |
-|---|---|---|
-| **Git** | Todos | `git --version` |
-| **Docker Desktop** (con WSL 2 en Windows). Debe estar **abierto** para trabajar | Todos (para levantar la base de datos y los servicios) | `docker --version` y `docker ps` sin error |
-| **Visual Studio Code** u otro editor | Todos | — |
-| Tu **herramienta de IA** (Claude Code, Codex, Copilot o Cursor) | Todos | — |
-| **JDK 21** (por ejemplo, Eclipse Temurin 21) | Josué, Hugo y Pablo (API) | `java -version` muestra 21 |
-| **Node.js 22 LTS** y **pnpm** (`npm install -g pnpm`) | Alex, Kim (web) y Carlos (app) | `node -v` y `pnpm -v` |
-| **Expo Go de SDK 54** en un teléfono Android. Se descarga desde **expo.dev/go**, **no** desde la Play Store | Carlos | La app abre |
-| Cuenta de **Expo** y **EAS CLI** (`npm install -g eas-cli`) | Carlos (viernes 2) | `eas --version` |
-| **DBeaver** (opcional), para ver la base de datos | Quien quiera | — |
+Prepara tu computadora con la **`16 - Guia de Arranque del Proyecto.md`** (en la raíz de la documentación): qué instalar, cómo clonar los repositorios, cómo crear tu `.env` y cómo encender el proyecto cada día.
 
-No necesitas instalar Maven: el proyecto del API trae su propio Maven (`mvnw`).
-
-## 2. Qué prompt usa cada persona (objetivo 0)
+## 2. Qué prompt usa cada persona
 
 | Prompt | Repositorio | Responsable | Horas | Cuándo |
 |---|---|---|---|---|
@@ -33,10 +22,41 @@ No necesitas instalar Maven: el proyecto del API trae su propio Maven (`mvnw`).
 | OBJ-0D — API: seguridad y JWT | `villa-serena-api` | Pablo | 4 | Vie 2 y Lun 5 |
 | OBJ-0E — Web: proyecto base y BFF | `villa-serena-web` | Alex (y Kim, diseño base) | 3,5 + 1 | Jue 1 (opcional), Vie 2 |
 | OBJ-0F — Móvil: proyecto base | `villa-serena-movil` | Carlos | 1 + 1 (push, Vie 2) | Jue 1 (opcional) y Vie 2 |
+| OBJ-0G — API: contrato OpenAPI (parte 1 y parte 2) | `villa-serena-api` | Josué (Pablo y Hugo revisan) | 3 | Vie 2 (parte 1) y Lun 5 (parte 2) |
+
+**Prompts de los demás objetivos ya disponibles:**
+
+| Prompt | Repositorio | Responsable | Horas | Cuándo |
+|---|---|---|---|---|
+| OBJ-1C — API: correo de confirmación y canal | `villa-serena-api` | Hugo | 2,5 | Vie 2 |
+| OBJ-1E — Web: resultado del pago y canal simulado | `villa-serena-web` | Alex | 2,5 | Vie 2 y Lun 5 |
+| OBJ-4C — Web: cuenta, check-out e impresión | `villa-serena-web` | Kim | 3 | Vie 2 (datos de prueba) y Jue 8 (conectar) |
+| OBJ-1A — API: hotel, catálogo, diseño del canal y guía de Stripe CLI | `villa-serena-api` y `villa-serena-docs` | Josué | 2,5 | Mar 6 y Jue 8 |
+| OBJ-1B — API: disponibilidad, reserva, cargos y Stripe | `villa-serena-api` | Pablo | 5,5 | Lun 5 a Mié 7 |
+| OBJ-1D — Web: web pública, búsqueda y formulario de reserva | `villa-serena-web` | Kim | 5,5 | Lun 5 y Mar 6 |
+| OBJ-2C — API: habitaciones | `villa-serena-api` | Hugo | 1,5 | Lun 5 |
+| OBJ-2E — Web: búsqueda, cancelación y habitaciones | `villa-serena-web` | Alex | 4 | Lun 5 y Mar 6 |
+| OBJ-3A-1 — API: Room Service y WebSocket | `villa-serena-api` | Hugo | 6 | Lun 5 a Mié 7 |
+| OBJ-3A-2 — API: acceso del huésped, mis reservas y push | `villa-serena-api` | Carlos | 2,5 | Lun 5 y Mar 6 |
+| OBJ-3A-4 — App: acceso, estadía, pedidos y push | `villa-serena-movil` | Carlos | 6,5 | Lun 5 a Jue 8 |
+| OBJ-2A — API: huéspedes, búsqueda, datos del Gantt y reservas de prueba | `villa-serena-api` | Josué | 4,5 | Mar 6 a Jue 8 |
+| OBJ-2B — API: reservas de Recepción, cancelación y check-in | `villa-serena-api` | Pablo | 3,5 | Mié 7 y Jue 8 |
+| OBJ-2D — Web: Gantt, reserva de Recepción y check-in | `villa-serena-web` | Kim | 6,5 | Mar 6 y Mié 7 |
+| OBJ-3A-3 — Web: Room Service en vivo y cliente de tiempo real | `villa-serena-web` | Alex | 5 | Mié 7 y Jue 8 |
+| OBJ-3B-1 — API: limpieza e incidencias | `villa-serena-api` | Hugo | 3,5 | Mié 7 y Jue 8 |
+| OBJ-3B-2 — API y App: solicitudes del huésped | `villa-serena-api` y `villa-serena-movil` | Carlos | 4,5 | Mié 7 y Jue 8 |
+| OBJ-3B-3 — Web: limpieza y solicitudes | `villa-serena-web` | Kim | 3,5 | Jue 8 |
+| OBJ-3B-4 — Web: incidencias | `villa-serena-web` | Alex | 2,5 | Jue 8 |
+| OBJ-4A — API: cuenta, check-out y pago desde la app | `villa-serena-api` | Pablo | 3,5 | Jue 8 |
+| OBJ-4B — API: factura | `villa-serena-api` | Hugo | 2 | Mié 7 |
+| OBJ-INT — Integración y prueba del flujo completo | Todos | Todos | 3 c/u | Vie 9 y Sáb 10 |
+| OBJ-4D — App: cuenta y pago del saldo | `villa-serena-movil` | Carlos | 3 | Vie 2 (datos de prueba) y Jue 8 (conectar) |
+
+Con esto están todos los prompts del plan (objetivos 0 a 4 e integración).
 
 **Orden en el API:** OBJ-0B (proyecto base de Hugo) va primero. Josué y Pablo empiezan cuando Hugo lo haya fusionado en `main` (sección 3, paso 1). Si todavía no está, parten de la rama de Hugo: `git switch obj0-proyecto-base` y desde ahí crean la suya.
 
-**Todos necesitan el Docker de Josué (OBJ-0A)** para probar: cuando esté en `main`, cada uno clona `villa-serena-infra` y lo levanta en su computadora (sección 4).
+**Todos necesitan el Docker de Josué (OBJ-0A)** para probar: cuando esté en `main`, cada uno clona `villa-serena-infra` y lo levanta en su computadora (documento 16, sección 2.3).
 
 El **contrato del API** (`openapi.yaml`, objetivos 0 a 2) se congela el viernes 2 y tiene su propio prompt aparte.
 
@@ -87,7 +107,9 @@ git push -u origin obj0-<nombre-corto>
 3. Escribe qué hiciste y cómo lo probaste. Pulsa **Create pull request** y avisa al grupo.
 4. Otro integrante lo revisa y pulsa **Squash and merge** → **Confirm**.
 
-**7. Después del merge**
+**7. Marcar tu avance:** cuando el PR se fusione, marca tu casilla en `17 - Avance del Proyecto.md` (de `[ ]` a `[x]`, con el número del PR). Si no sabes cómo, avisa a Josué.
+
+**8. Después del merge**
 
 ```bat
 git switch main
@@ -95,24 +117,9 @@ git pull
 git branch -D obj0-<nombre-corto>
 ```
 
-## 4. El archivo `.env` (secretos)
+## 4. El `.env` y el entorno local
 
-1. En cada repositorio hay un `.env.example` con los nombres de las variables. Cópialo:
-   ```bat
-   copy .env.example .env
-   ```
-2. Abre `.env` y pon tus valores.
-3. Los valores que deben ser **iguales para todos** (por ejemplo, los hashes de los usuarios de prueba y de las claves de los canales) se comparten **por mensaje privado** entre el equipo.
-4. **Nunca subas el `.env` a Git ni pegues sus claves en un chat de IA.**
-
-**Levantar los servicios** (con Docker Desktop abierto), desde la carpeta de `villa-serena-infra`:
-
-```bat
-docker compose -f docker-compose.dev.yml up -d
-docker compose -f docker-compose.dev.yml ps
-```
-
-Para apagarlos: `docker compose -f docker-compose.dev.yml down`.
+Está en la **`16 - Guia de Arranque del Proyecto.md`**: qué es el `.env` y cómo crearlo (sección 2.2), qué servicios corren en Docker (sección 3), cómo encender el proyecto cada día (sección 4) y cómo apagarlo (sección 6).
 
 ## 5. Cómo usar un prompt con la IA
 
@@ -155,19 +162,9 @@ En cada uno de los otros cuatro:
 | ¿Tocó piezas compartidas? | Creó migraciones (si no eres Josué) o cambió `openapi.yaml` sin avisar |
 | ¿Funciona en local? | Los pasos de "Cómo saber que quedó terminado" fallan |
 
-## 8. Errores comunes y qué hacer
+## 8. Errores comunes
 
-| Mensaje o situación | Qué significa | Qué hacer |
-|---|---|---|
-| `fatal: not a git repository` | Estás en otra carpeta | Entra a la carpeta del repositorio con `cd /d "<ruta>"` |
-| `Deletion of directory '.git/...' failed. Should I try again? (y/n)` | Windows no deja borrar una carpeta interna vacía porque un programa la tiene abierta | Escribe `n`. No afecta al repositorio |
-| `cannot lock ref ...` al hacer `git fetch` | Una referencia local quedó a medio actualizar | Repite `git fetch`. Si sigue: `git update-ref -d refs/remotes/origin/main` y `git fetch` |
-| `Cannot connect to the Docker daemon` o `docker` no responde | Docker Desktop está cerrado | Ábrelo y espera a que diga "Running" |
-| `port is already allocated` | Otro programa usa ese puerto | Cierra ese programa o cambia el puerto en tu `.env` |
-| `'.' no se reconoce como un comando` al usar `./mvnw` | En `cmd` se escribe distinto | Usa `mvnw.cmd spring-boot:run` (en PowerShell sí funciona `./mvnw`) |
-| La app en el teléfono no llega al API | Teléfono y computadora en redes distintas, o se usó `localhost` | Misma red Wi-Fi y la IP local de la computadora en `EXPO_PUBLIC_API_URL` |
-| El pull request dice que tiene conflictos | Otra persona cambió lo mismo | No lo resuelvas a ciegas: avisa a Josué |
-| La IA quiere actualizar versiones o agregar funciones | Se sale del alcance | Recházalo (frases de la sección 5) |
+Están en la **`16 - Guia de Arranque del Proyecto.md`**, sección 7.
 
 ## 9. Si te atrasas
 
